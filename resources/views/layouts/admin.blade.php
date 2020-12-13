@@ -99,6 +99,19 @@
                 </ul>
 
                 @endrole
+                @role('admin')
+                {{-- user submenu --}}
+                <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"  >User</a>
+                <ul class="{{ Request::path() === 'user' || Request::path() === 'user_adde' ? 'show ' : ''}}collapse list-unstyled"  id="userSubmenu">
+                    <li>
+                        <a href="{{route('users.index')}}">Users List</a>
+                    </li>
+                    <li>
+                        <a href="{{route('users.create')}}">Add User</a>
+                    </li>
+                </ul>
+
+                @endrole
 
                 <hr style="margin: 0;">
 
@@ -140,23 +153,6 @@
                 <hr style="margin: 0;">
                 <a href="/support">Support</a>
             </li>
-        </ul>
-
-
-        <ul class="list-unstyled CTAs">
-            <li>
-                <a class="download dropdown-item" href="{{ route('logout') }}"
-                   onclick="event.preventDefault();
-                             document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
-                </a>
-
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-
-            </li>
-
         </ul>
         <ul class="list-unstyled CTAs">
             <li>

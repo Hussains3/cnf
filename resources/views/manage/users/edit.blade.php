@@ -2,19 +2,13 @@
 
 @section('content')
 
-<h1>Create New User</h1>
+<h1>Edit This User</h1>
 <hr>
 {{ Form::model($user, ['route' => ['users.update', $user->id], 'method' => 'put']) }}
     {{csrf_field()}}
     <div class="row">
 
         <div class="col-md-7">
-
-          {{Form::label('counter', 'Counter No')}}
-          <div class="input-group mb-3">        
-            {{Form::number('counter', null, array('class' => 'form-control', 'placeholder' => 'Counter No'))}}
-          </div>
-
           {{Form::label('name', 'Full Name')}}
           <div class="input-group mb-3">        
             {{Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Full Name'))}}

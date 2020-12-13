@@ -10,10 +10,6 @@
   <div class="row">
 
     <div class="col-md-7">
-      {{Form::label('counter', 'Counter No')}}
-      <div class="input-group mb-3">        
-        {{Form::number('counter', null, array('class' => 'form-control', 'placeholder' => 'Counter No'))}}
-      </div>
 
       {{Form::label('name', 'Full Name')}}
       <div class="input-group mb-3">        
