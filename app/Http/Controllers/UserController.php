@@ -63,7 +63,7 @@ class UserController extends Controller
       }
 
       $user = new User();
-      $user->counter = $request->counter;
+      // $user->counter = $request->counter;
       $user->name = $request->name;
       $user->email = $request->email;
       $user->password = Hash::make($password);
@@ -128,7 +128,7 @@ class UserController extends Controller
       ]);
 
       $user = User::findOrFail($id);
-      $user->counter = $request->counter;
+      // $user->counter = $request->counter;
       $user->name = $request->name;
       $user->email = $request->email;
       if ($request->password_options == 'auto') {
