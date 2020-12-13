@@ -1,0 +1,29 @@
+.card-accent-primary {
+    border-top: 2px solid #321fdb !important;
+}
+
+.card-accent-dark {
+    border-top: 2px solid
+    #636f83 !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.select2.select2-container.select2-container--default {
+    width: 100% !important;
+}
+
+.jumbotron {
+    background-color: #d3dce6 !important;
+}
