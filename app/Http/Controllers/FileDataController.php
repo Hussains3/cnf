@@ -53,7 +53,7 @@ class FileDataController extends Controller
 
 
         $agents = Agent::pluck('name','id');
-        return view('file_datas.create',compact('agents','next_lodgement_no','year'));
+        return view('file_datas.create',compact('agents','next_lodgement_no','year','file_data'));
     }
 
     /**
@@ -191,10 +191,8 @@ class FileDataController extends Controller
                 'ie_type' => 'required',
                 'agent_id' => 'required',
                 'group' => 'required',
-                'goods_name' => 'required',
                 'goods_type' => 'required',
                 'be_number' => 'required',
-                'be_date' => 'required',
                 'page' => 'required',
                 'fees' => 'required'
             ]);
@@ -283,10 +281,8 @@ class FileDataController extends Controller
                 'ie_type' => 'required',
                 'agent_id' => 'required',
                 'group' => 'required',
-                'goods_name' => 'required',
                 'goods_type' => 'required',
                 'be_number' => 'required',
-                'be_date' => 'required',
                 'page' => 'required',
                 'fees' => 'required'
             ]);
@@ -397,10 +393,10 @@ class FileDataController extends Controller
                 $data_user->note = Auth::user()->name;
                 $data_user->save();
 
-                //send_sms($sms_data, $agent_phone);
+                send_sms($sms_data, $agent_phone);
 
                 $djm = 'djbiswasbd@gmail.com';
-//                \Mail::to($agent_email)->send(new SendMailable($email_data));
+                Mail::to($agent_email)->send(new SendMailable($email_data));
             }
         }
 

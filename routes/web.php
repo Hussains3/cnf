@@ -83,4 +83,7 @@ Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 Route::resource('/users', 'App\Http\Controllers\UserController');
 
 
+Route::resource('/salary', 'App\Http\Controllers\SalaryController');
+
+
 

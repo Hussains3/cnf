@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use App\Models\Salary;
 use Illuminate\Http\Request;
 
@@ -24,7 +24,9 @@ class SalaryController extends Controller
      */
     public function create()
     {
-        //
+        $i = 0;
+        $user = User::get();
+        return view('salary.create',compact('user','i'));
     }
 
     /**

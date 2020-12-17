@@ -31,9 +31,10 @@
     <!-- Sidebar  -->
 
     <nav id="sidebar">
-        <div class="sidebar-header">
-{{--            <img src="/sst.jpg" alt="SSTraders" width="200">--}}
-            <h1 class="text-center">C&F</h1>
+        <div class="sidebar-header d-flex justify-content-center">
+            <img src="{{asset('images/app_logo.png')}}" alt="C&F" width="70">
+            {{-- <h1 class="text-center">C&F</h1>
+            <img src="" alt="" width="50px"> --}}
         </div>
 
         <ul class="list-unstyled components">
@@ -109,6 +110,9 @@
                     <li>
                         <a href="{{route('users.create')}}">Add User</a>
                     </li>
+                    <li>
+                        <a href="{{route('salary.create')}}">Add Salary</a>
+                    </li>
                 </ul>
 
                 @endrole
@@ -174,18 +178,18 @@
     <!-- Page Content  -->
     <div id="content" >
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
+            <div class="container-fluid d-flex justify-content-between text-center">
 
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
-                    {{-- <span>Toggle Sidebar</span>--}}
                 </button>
-                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                {{-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fas fa-align-justify"></i>
-                </button>
+                </button> --}}
+                <h1 class="text-uppercase w-75 text-primary d-sm-none">Benapole customs c&F agents association</h1>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ml-auto">
+                <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav">
 
                         <li class="nav-item active">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -203,9 +207,6 @@
                                 </form>
                             </div>
                         </li>
-{{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link" href="#">Page</a>--}}
-{{--                        </li>--}}
                     </ul>
                 </div>
             </div>

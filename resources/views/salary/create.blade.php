@@ -3,72 +3,35 @@
 @section('content')
     <div style="margin: 0 15%;">
         <div class="card card-accent-primary mb-3 text-left" style="">
-            <div class="card-header">Add Importer / Exporter</div>
+            <div class="card-header">Add Salary</div>
             <div class="card-body text-primary">
 
-            {!! Form::open(['route' => 'ie_datas.store', 'method' => 'post', 'enctype' => 'multipart/form-data' ]) !!}
+            {!! Form::open(['route' => 'salary.store', 'method' => 'post', 'enctype' => 'multipart/form-data' ]) !!}
 
             {{csrf_field()}}
 
             <div class="row">
 
                 <div class="form-group col-6">
-                    {{Form::label('bin_no','BIN No:') }}
+                    {{Form::label('user_name','User Name') }}
 
-                    {{Form::text('bin_no', null, ['class' => 'form-control', 'placeholder' => 'BIN No', 'required']) }}
+                    {{Form::text('user_name', null, ['class' => 'form-control', 'placeholder' => 'Name', 'required']) }}
 
-                    @error('bin_no')
+                    @error('user_name')
                     <span>{{ $message }}</span>
                     @enderror
 
                 </div>
 
-
-                <!-- Importer / Exporter Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('ie','Importer / Exporter: ') }} <br>
-                    <div class="radio radio-inline">
-                        <span> </span>
-                        <label>
-                            {{Form::radio('ie', 'Importer', true)}} Importer
-                        </label>
-                        <label>
-                            {{Form::radio('ie', 'Exporter')}} Exporter
-                        </label>
-
-                    </div>
-                </div>
-
                 <div class="form-group col-6 ">
-                    {{Form::label('name', 'Importer / Exporter Name')}}
+                    {{Form::label('year', 'Year')}}
                     <div class="input-group mb-3">
-                        {{Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'Importer / Exporter Name', 'required'  ))}}
-                        @error('name')
+                        {{Form::text('year', null, array('class' => 'form-control', 'placeholder' => '2020', 'required'  ))}}
+                        @error('year')
                         <span>{{ $message }}</span>
                         @enderror
 
                     </div>
-                </div>
-
-                <div class="form-group col-6 ">
-                    {{Form::label('owners_name', 'Owner / Manager Name')}}
-                    <div class="input-group mb-3">
-                        {{Form::text('owners_name', null,['class' => 'form-control', 'placeholder' => 'Owner Name'])}}
-                        @error('owners_name')
-                        <span>{{ $message }}</span>
-                        @enderror
-
-                    </div>
-                </div>
-
-                <!-- Photo Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('photo','Photo:') }}
-                    {{Form::file('photo', null) }}
-                    <p class="help-block"></p>
-                    @error('photo')
-                    <span>{{ $message }}</span>
-                    @enderror
                 </div>
 
 
@@ -76,7 +39,7 @@
                 <div class="form-group col-6">
                     {{Form::label('destination','Designation:') }}
 
-                    {{Form::text('destination', null, ['class' => 'form-control', 'placeholder' => 'Designation']) }}
+                    {{Form::text('destination', null, ['class' => 'form-control', 'placeholder' => 'Designation', 'required']) }}
 
                     @error('destination')
                     <span>{{ $message }}</span>
@@ -88,7 +51,7 @@
                 <div class="form-group col-6">
                     {{Form::label('office_address','Agent / Office Address:') }}
 
-                    {{Form::text('office_address', null, ['class' => 'form-control', 'placeholder' => 'Office Address']) }}
+                    {{Form::text('office_address', null, ['class' => 'form-control', 'placeholder' => 'Office Address', 'required']) }}
 
                     @error('office_address')
                     <span>{{ $message }}</span>
@@ -100,7 +63,7 @@
                 <div class="form-group col-6">
                     {{Form::label('phone','Phone Number:') }}
 
-                    {{Form::text('phone', null, ['class' => 'form-control', 'placeholder' => 'Agent Phone Number']) }}
+                    {{Form::text('phone', null, ['class' => 'form-control', 'placeholder' => 'Agent Phone Number', 'required']) }}
 
                     @error('phone')
                     <span>{{ $message }}</span>
@@ -121,10 +84,10 @@
                 </div>
 
                 <!-- Phone Number Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('house','House') }}
+                <div class="form-group col-12">
+                    {{Form::label('house','House / Station') }}
 
-                    {{Form::text('house', null, ['class' => 'form-control', 'placeholder' => 'Station / House']) }}
+                    {{Form::text('house', null, ['class' => 'form-control', 'placeholder' => 'Station / House', 'required']) }}
 
                     @error('house')
                     <span>{{ $message }}</span>
