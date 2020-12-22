@@ -15,13 +15,14 @@ class CreateSalariesTable extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
-            $table->integer('year');
-            $table->integer('month');
-            $table->integer('absent');
-            $table->bigInteger('work_point');
-            $table->integer('parcent');
-            $table->integer('add');
-            $table->bigInteger('final');
+            $table->integer('year')->nullable();
+            $table->integer('month')->nullable();
+            $table->integer('absent')->nullable();
+            $table->bigInteger('work_point')->nullable();
+            $table->bigInteger('leave')->nullable();
+            $table->integer('parcent')->nullable();
+            $table->integer('add')->nullable();
+            $table->bigInteger('final')->nullable();
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')

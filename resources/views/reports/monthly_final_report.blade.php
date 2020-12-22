@@ -36,7 +36,7 @@
         </form>
     </div>
 
-    <table id="all_report" class="table table-striped table-bordered " style="width:100%">
+    <table id="monthly_final_report" class="table table-striped table-bordered " style="width:100%">
         <thead>
             <tr>
                 <th>No</th>
@@ -116,7 +116,7 @@
 
             function load_data(from_date = '', to_date = '', agent_id = '')
             {
-                $('#all_report').DataTable({
+                $('#monthly_final_report').DataTable({
 
                     processing: true,
                     serverSide: true,
@@ -197,7 +197,7 @@
 
                 if( from_date != '' &&  to_date != '')
                 {
-                    $('#all_report').DataTable().destroy();
+                    $('#monthly_final_report').DataTable().destroy();
                     load_data(from_date, to_date, agent_id);
                 }
                 else
@@ -210,7 +210,7 @@
                 $('#from_date').val('');
                 $('#to_date').val('');
                 $("#agent_id").select2().val('').trigger("change");
-                $('#all_report').DataTable().destroy();
+                $('#monthly_final_report').DataTable().destroy();
                 customer_name = '';
                 document.getElementById("tr").innerHTML = 'Assessment Report Per Day '+customer_name;
                 load_data();

@@ -160,7 +160,7 @@
         </ul>
         <ul class="list-unstyled CTAs">
             <li>
-                <a class="download dropdown-item" href="{{ route('logout') }}"
+                <a class="btn btn-danger" href="{{ route('logout') }}"
                    onclick="event.preventDefault();
                              document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
@@ -186,7 +186,7 @@
                 {{-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fas fa-align-justify"></i>
                 </button> --}}
-                <h1 class="text-uppercase w-75 text-primary d-sm-none">Benapole customs c&F agents association</h1>
+                <h1 class="text-uppercase w-75 text-primary">Benapole customs c&F agents association</h1>
 
                 <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
                     <ul class="nav navbar-nav">

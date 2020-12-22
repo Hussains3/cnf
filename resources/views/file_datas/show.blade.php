@@ -15,7 +15,6 @@
         </div>
         <div id="printDiv" class="invoice overflow-auto">
             <div style="width: 20.6cm; height:14.8cm;background-image: url(/memo.jpg); background-size: cover">
-sdsdsd
                 <main style="padding-left:5.7cm; padding-top: 5.3cm">
                     <div class="row">
                         <div class="col-6">
@@ -47,7 +46,6 @@ sdsdsd
         </div>
     </div>
     <script !src="">
-
         function printDiv() {
             Popup($('#printDiv').outerHTML);
             function Popup(data)

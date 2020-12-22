@@ -66,7 +66,7 @@
                                     @endif
                                 @endrole
                                 @role('deliver')
-                                    @if($file_data->status == 'Delivered'  )
+                                    @if($file_data->status == 'Delivered')
                                         Edit
                                     @else
                                         Deliver
@@ -76,7 +76,7 @@
                             @endif
 
                             @role('deliver')
-                            @if($file_data->status == 'Delivered'  )
+                            @if($file_data->status == 'Delivered' || $file_data->status == 'Printed')
                                 <a class="btn btn-danger" target="_blank" href="{{route('file_datas.show', $file_data->id)}}">Print </a>
                             @endif
                             @endrole

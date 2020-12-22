@@ -40,6 +40,10 @@ class CreateFileDatasTable extends Migration
             $table->foreign('agent_id')->references('id')
                 ->on('agents')->onUpdate('cascade')->onDelete('cascade');
 
+            $table->unsignedBigInteger('operator_id')->nullable();
+            $table->foreign('operator_id')->references('id')
+                ->on('users')->onUpdate('cascade')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

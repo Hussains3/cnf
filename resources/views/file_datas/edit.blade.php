@@ -111,7 +111,7 @@
                     <div class="form-group col-4 ">
                         {{Form::label('owners_name', 'Owner / Manager Name')}}
                         <div class="input-group mb-3">
-                            {{Form::text('owners_name', $file_data->ie_data->owners_name ?? '', array('class' => 'form-control', 'placeholder' => 'Owner Name', 'required'  ))}}
+                            {{Form::text('owners_name', $file_data->ie_data->owners_name ?? '', array('class' => 'form-control', 'placeholder' => 'Owner Name'))}}
                             @error('owners_name')
                             <span>{{ $message }}</span>
                             @enderror
@@ -134,7 +134,7 @@
                     <div class="form-group col-4">
                         {{Form::label('destination','Designation:') }}
 
-                        {{Form::text('destination', $file_data->ie_data->destination ?? '', ['class' => 'form-control', 'placeholder' => 'Destination', 'required']) }}
+                        {{Form::text('destination', $file_data->ie_data->destination ?? '', ['class' => 'form-control', 'placeholder' => 'Destination']) }}
 
                         @error('destination')
                         <span>{{ $message }}</span>
@@ -146,7 +146,7 @@
                     <div class="form-group col-8">
                         {{Form::label('office_address','Agent / Office Address:') }}
 
-                        {{Form::text('office_address', $file_data->ie_data->office_address ?? '', ['class' => 'form-control', 'placeholder' => 'Office Address', 'required']) }}
+                        {{Form::text('office_address', $file_data->ie_data->office_address ?? '', ['class' => 'form-control', 'placeholder' => 'Office Address']) }}
 
                         @error('office_address')
                         <span>{{ $message }}</span>
@@ -182,7 +182,7 @@
                     <div class="form-group col-8">
                         {{Form::label('house','House / Station') }}
 
-                        {{Form::text('house', $file_data->ie_data->house ?? '', ['class' => 'form-control', 'placeholder' => 'Station / House', 'required']) }}
+                        {{Form::text('house','Benapol', ['class' => 'form-control', 'placeholder' => 'Benapol', 'required']) }}
 
                         @error('house')
                         <span>{{ $message }}</span>
@@ -202,14 +202,20 @@
                     <div class="form-group col-4">
                         {{Form::label('goods_name', 'Goods Name')}}
                         <div class="input-group mb-3">
-                            {{Form::text('goods_name', null, array('class' => 'form-control', 'placeholder' => 'Goods Name', 'required'  ))}}
+                            {{Form::text('goods_name', null, array('class' => 'form-control', 'placeholder' => 'Goods Name'))}}
                         </div>
                     </div>
 
                     <div class="form-group col-4">
                         {{Form::label('goods_type', 'Goods Type')}}
                         <div class="input-group mb-3">
-                            {{Form::select('goods_type', ['Perishable'=>'Perishable','Non-Perishable'=>'Non-Perishable'], null, array('class' => 'form-control', 'placeholder' => 'Goods Type', 'required'  ))}}
+                            {{-- {{Form::select('goods_type', ['Perishable'=>'Perishable','Non-Perishable'=>'Non-Perishable'], null, array('class' => 'form-control', 'placeholder' => 'Goods Type', 'required'  ))}} --}}
+                            
+                            {{Form::radio('goods_type', 'Perishable', true,['class' => 'form-control','required'])}}
+                            {{Form::label('Perishable')}}
+                            
+                            {{Form::radio('goods_type', 'Non-Perishable', true,['class' => 'form-control','required'])}}
+                            {{Form::label('Non-Perishable')}}
                         </div>
                     </div>
 
@@ -217,13 +223,14 @@
                         {{Form::label('be_number', 'B/E Number')}}
                         <div class="input-group mb-3">
                             {{Form::text('be_number', $next_be_number, array('class' => 'form-control', 'placeholder' => 'B/E Number', 'required'  ))}}
+                            
                         </div>
                     </div>
 
                     <div class="form-group col-4">
-                        {{Form::label('be_date', 'B/C Date')}}
+                        {{Form::label('be_date', 'B/E Date')}}
                         <div class="input-group mb-3">
-                            {{Form::date('be_date', \Carbon\Carbon::now(), array('class' => 'form-control', 'placeholder' => 'be_date ', 'required'  ))}}
+                            {{Form::date('be_date', \Carbon\Carbon::now(), array('class' => 'form-control', 'placeholder' => 'be_date'))}}
                         </div>
                     </div>
 
@@ -238,7 +245,7 @@
                     <div class="form-group col-4">
                         {{Form::label('fees', 'Fees /=')}}
                         <div class="input-group mb-3">
-                            {{Form::number('fees', '230', array('class' => 'form-control', 'placeholder' => '230/=', 'required'  ))}}
+                            {{Form::number('fees', '230', array('class' => 'form-control', 'placeholder' => '230/='))}}
                         </div>
                     </div>
 
@@ -248,7 +255,7 @@
 
                     <div class="form-group col-12">
                         <div class="text-right">
-                            {{Form::submit('Submit', ['class' => 'btn btn-primary'])}}
+                            {{Form::submit('Deliver', ['class' => 'btn btn-primary'])}}
                         </div>
                     </div>
 
@@ -266,8 +273,8 @@
 @endsection
 
 @section('scripts')
-    <script>
-
-    </script>
+<script>
 
 @endsection
+
+

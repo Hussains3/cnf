@@ -104,6 +104,15 @@ class FileDataController extends Controller
      */
     public function show(File_data $file_data)
     {
+        if( Auth::user()->hasRole('admin|deliver')){
+            
+
+
+            $ie_data = File_data::find($file_data->ie_data_id);
+            $ie_data->status = 'Printed';
+            $ie_data->save();
+        }
+
         return view('file_datas.show',compact('file_data'));
     }
 
@@ -190,11 +199,9 @@ class FileDataController extends Controller
                 'manifest_date' => 'required',
                 'ie_type' => 'required',
                 'agent_id' => 'required',
-                'group' => 'required',
                 'goods_type' => 'required',
                 'be_number' => 'required',
-                'page' => 'required',
-                'fees' => 'required'
+                'page' => 'required'
             ]);
 
             if ($file_data->ie_data_id == '') {
@@ -209,6 +216,7 @@ class FileDataController extends Controller
                 $ie_data->ie = $request->ie_type;
                 $ie_data->name = $request->name;
                 $ie_data->owners_name = $request->owners_name;
+                
 
                 if ($request->hasFile('photo')) {
                     //get image file.
@@ -252,6 +260,7 @@ class FileDataController extends Controller
             $file_data->be_date = $request->be_date;
             $file_data->page = $request->page;
             $file_data->fees = $request->fees;
+            $file_data->operator_id = Auth::user()->id;
             $file_data->status = 'Operated';
             $file_data->save();
 
@@ -283,8 +292,7 @@ class FileDataController extends Controller
                 'group' => 'required',
                 'goods_type' => 'required',
                 'be_number' => 'required',
-                'page' => 'required',
-                'fees' => 'required'
+                'page' => 'required'
             ]);
 
 
@@ -395,7 +403,7 @@ class FileDataController extends Controller
 
                 send_sms($sms_data, $agent_phone);
 
-                $djm = 'djbiswasbd@gmail.com';
+                $djm = 'bnplcnfasso@gmail.com';
                 Mail::to($agent_email)->send(new SendMailable($email_data));
             }
         }
