@@ -53,7 +53,7 @@
                             @csrf
                             @method('DELETE')
                             {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
-                            @if($file_data->status != 'Delivered')
+                            @if($file_data->status != 'Delivered' && $file_data->status != 'Printed')
                             <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">
                                 @role('admin|receiver')
                                 Edit
