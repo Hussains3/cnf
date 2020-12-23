@@ -19,10 +19,21 @@ class AgentFactory extends Factory
      *
      * @return array
      */
+    //
+
     public function definition()
     {
         return [
-            //
+            'ain_no' => $this->faker->numberBetween(5000, 9000),
+            'name' => $this->faker->company,
+            'owners_name' => $this->faker->firstNameMale,
+            'destination' => $this->faker->jobTitle,
+            'office_address' => $this->faker->streetAddress,
+            'phone' => $this->faker->e164PhoneNumber,
+            'email' => $this->faker->safeEmail,
+            'house' => $this->faker->word,
+            'note' => $this->faker->text(20),
+            'photo' => $this->faker->image(null, 50, 50, null, true, true, null),
         ];
     }
 }

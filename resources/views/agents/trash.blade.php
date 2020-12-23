@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col">
-            <h2>All Agents</h2>
+            <h2>Deactivated Agents</h2>
         </div>
         <div class="col text-right">
 
@@ -33,7 +33,7 @@
             </thead>
 
             <tbody>
-            @foreach ($agents as $agent)
+            @foreach ($tAgent as $agent)
                 <tr>
 
                     <th>{{++$i}} </th>
@@ -56,19 +56,7 @@
                             {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
 
                             @role('admin')
-                            <a class="btn btn-info btn-sm" href="{{route('agents.edit', $agent->id)}}"><i class="far fa-edit"></i></a>
-                            {{-- <a class="btn btn-danger btn-sm" href="{{route('agents.destroy',$agent->id)}}"><i class="fas fa-user-times"></i></a> --}}
-
-                            <form action="{{ route('agents.destroy',$agent->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
-
-                                {{-- <a class="btn btn-info" href="{{route('productModels.edit', $productModel->id)}}"> Edit</a> --}}
-                                {{-- <a class="btn btn-danger btn-sm" href="{{route('agents.destroy',$agent->id)}}"><i class="fas fa-user-times"></i></a> --}}
-                                {!! Form::submit('Deavtive', ['class'=>'btn btn-sm btn-danger']) !!}
-
-                            </form>
+                            <a class="btn btn-info" href="{{route('agents.edit', $agent->id)}}"> Restore</a>
                             @endrole
 
 

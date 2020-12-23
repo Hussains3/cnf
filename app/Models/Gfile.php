@@ -4,10 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Agent extends Model
+class Gfile extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+    // protected $fillable = ['assesmentDate', 'greenFile', 'waitingGreenFile'];
 }

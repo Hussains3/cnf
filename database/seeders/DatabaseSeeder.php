@@ -17,5 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LaratrustSeeder::class);
         $this->call(SalarySeeder::class);
         $this->call(UserSeeder::class);
+        \App\Models\Gfile::factory(100)->create();
+        \App\Models\Agent::factory(100)->create();
     }
 }

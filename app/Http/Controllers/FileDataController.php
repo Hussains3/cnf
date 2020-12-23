@@ -23,14 +23,14 @@ class FileDataController extends Controller
     {
         $i = 0;
         $file_datas = File_data::with('agent')->with('ie_data')->get();
-        return view('file_datas.index', compact('file_datas','i'));
+        return view('file_datas.index', compact('file_datas', 'i'));
     }
 
     public function file_list()
     {
         $i = 0;
         $file_datas = File_data::get();
-        return view('file_datas.index', compact('file_datas','i'));
+        return view('file_datas.index', compact('file_datas', 'i'));
     }
 
     /**
@@ -45,15 +45,15 @@ class FileDataController extends Controller
         $year = $now->year;
 
         $file_data = File_data::latest()->first();
-        if ($file_data){
+        if ($file_data) {
             $next_lodgement_no = $file_data->lodgement_no + 1;
-        }else{
+        } else {
             $next_lodgement_no = 1;
         }
 
 
-        $agents = Agent::pluck('name','id');
-        return view('file_datas.create',compact('agents','next_lodgement_no','year','file_data'));
+        $agents = Agent::pluck('name', 'id');
+        return view('file_datas.create', compact('agents', 'next_lodgement_no', 'year', 'file_data'));
     }
 
     /**
@@ -104,8 +104,8 @@ class FileDataController extends Controller
      */
     public function show(File_data $file_data)
     {
-        if( Auth::user()->hasRole('admin|deliver')){
-            
+        if (Auth::user()->hasRole('admin|deliver')) {
+
 
 
             $ie_data = File_data::find($file_data->ie_data_id);
@@ -113,7 +113,7 @@ class FileDataController extends Controller
             $ie_data->save();
         }
 
-        return view('file_datas.show',compact('file_data'));
+        return view('file_datas.show', compact('file_data'));
     }
 
     /**
@@ -129,35 +129,34 @@ class FileDataController extends Controller
         $now = Carbon::now();
         $year = $now->year;
 
-        if($file_data->be_number != ''){
+        if ($file_data->be_number != '') {
 
-             $next_be_number = $file_data->be_number;
-        }else {
-            $next_be_number = File_data::where('status','!=','Received')->latest()->first();
-            if ($next_be_number){
+            $next_be_number = $file_data->be_number;
+        } else {
+            $next_be_number = File_data::where('status', '!=', 'Received')->latest()->first();
+            if ($next_be_number) {
                 $next_be_number = $next_be_number->be_number + 1;
-            }else{
+            } else {
                 $next_be_number = 1;
             }
-
         }
 
 
-        $agents = Agent::pluck('name','id');
-        $ie_datas = Ie_data::pluck('name','id');
+        $agents = Agent::pluck('name', 'id');
+        $ie_datas = Ie_data::pluck('name', 'id');
 
-         $file_data = File_data::where('id',$file_data->id)->with('ie_data')->first();
-
-
+        $file_data = File_data::where('id', $file_data->id)->with('ie_data')->first();
 
 
-        return view('file_datas.edit',compact('file_data','agents','ie_datas','year','next_be_number'));
+
+
+        return view('file_datas.edit', compact('file_data', 'agents', 'ie_datas', 'year', 'next_be_number'));
     }
 
     public function file_edit(File_data $file_data)
     {
-        $agents = Agent::pluck('name','id');
-        return view('file_datas.file_edit',compact('file_data','agents'));
+        $agents = Agent::pluck('name', 'id');
+        return view('file_datas.file_edit', compact('file_data', 'agents'));
     }
 
     /**
@@ -171,7 +170,7 @@ class FileDataController extends Controller
     {
 
 
-        if( Auth::user()->hasRole('receiver')){
+        if (Auth::user()->hasRole('receiver')) {
             $this->validate($request, [
                 'lodgement_no' => 'required',
                 'lodgement_date' => 'required',
@@ -190,7 +189,7 @@ class FileDataController extends Controller
             $file_data->save();
         }
 
-        if( Auth::user()->hasRole('operator')){
+        if (Auth::user()->hasRole('operator')) {
 
             $this->validate($request, [
                 'lodgement_no' => 'required',
@@ -207,42 +206,41 @@ class FileDataController extends Controller
             if ($file_data->ie_data_id == '') {
 
                 $ie_data = new Ie_data();
-            }else{
+            } else {
 
                 $ie_data = Ie_data::find($file_data->ie_data_id);
-
             }
-                $ie_data->bin_no = $request->bin_no;
-                $ie_data->ie = $request->ie_type;
-                $ie_data->name = $request->name;
-                $ie_data->owners_name = $request->owners_name;
-                
+            $ie_data->bin_no = $request->bin_no;
+            $ie_data->ie = $request->ie_type;
+            $ie_data->name = $request->name;
+            $ie_data->owners_name = $request->owners_name;
 
-                if ($request->hasFile('photo')) {
-                    //get image file.
-                    $image = $request->photo;
-                    //get just extension.
-                    $ext = $image->getClientOriginalExtension();
-                    //make a unique name
-                    $filename = uniqid() . '.' . $ext;
 
-                    //delete the previous image.
-//             Storage::delete("images/{$projectVerified->image}");
+            if ($request->hasFile('photo')) {
+                //get image file.
+                $image = $request->photo;
+                //get just extension.
+                $ext = $image->getClientOriginalExtension();
+                //make a unique name
+                $filename = uniqid() . '.' . $ext;
 
-                    //upload the image
-                    $request->photo->move(public_path('images'), $filename);
+                //delete the previous image.
+                //             Storage::delete("images/{$projectVerified->image}");
 
-                    //this column has a default value so don't need to set it empty.
-                    $ie_data->photo = 'images/'.$filename;
-                }
+                //upload the image
+                $request->photo->move(public_path('images'), $filename);
 
-                $ie_data->destination = $request->destination;
+                //this column has a default value so don't need to set it empty.
+                $ie_data->photo = 'images/' . $filename;
+            }
 
-                $ie_data->office_address = $request->office_address;
-                $ie_data->phone = $request->phone;
-                $ie_data->email = $request->email;
-                $ie_data->house = $request->house;
-                $ie_data->save();
+            $ie_data->destination = $request->destination;
+
+            $ie_data->office_address = $request->office_address;
+            $ie_data->phone = $request->phone;
+            $ie_data->email = $request->email;
+            $ie_data->house = $request->house;
+            $ie_data->save();
 
 
 
@@ -265,10 +263,10 @@ class FileDataController extends Controller
             $file_data->save();
 
 
-            $file_data_check = Data_user::where('user_id',Auth::user()->id)->where('file_data_id',$file_data->id)->get();
+            $file_data_check = Data_user::where('user_id', Auth::user()->id)->where('file_data_id', $file_data->id)->get();
 
 
-            if (count($file_data_check) == '0'){
+            if (count($file_data_check) == '0') {
                 $data_user = new Data_user();
                 $data_user->file_data_id = $file_data->id;
                 $data_user->user_id = Auth::user()->id;
@@ -277,10 +275,9 @@ class FileDataController extends Controller
             }
 
             flash('Received File Operated Success.')->success();
-
         }
 
-        if( Auth::user()->hasRole('admin|deliver')){
+        if (Auth::user()->hasRole('admin|deliver')) {
 
             $this->validate($request, [
                 'lodgement_no' => 'required',
@@ -299,10 +296,9 @@ class FileDataController extends Controller
             if ($file_data->ie_data_id == '') {
 
                 $ie_data = new Ie_data();
-            }else{
+            } else {
 
                 $ie_data = Ie_data::find($file_data->ie_data_id);
-
             }
             $ie_data->bin_no = $request->bin_no;
             $ie_data->ie = $request->ie_type;
@@ -318,13 +314,13 @@ class FileDataController extends Controller
                 $filename = uniqid() . '.' . $ext;
 
                 //delete the previous image.
-//             Storage::delete("images/{$projectVerified->image}");
+                //             Storage::delete("images/{$projectVerified->image}");
 
                 //upload the image
                 $request->photo->move(public_path('images'), $filename);
 
                 //this column has a default value so don't need to set it empty.
-                $ie_data->photo = 'images/'.$filename;
+                $ie_data->photo = 'images/' . $filename;
             }
 
             $ie_data->destination = $request->destination;
@@ -355,24 +351,25 @@ class FileDataController extends Controller
             $file_data->save();
 
 
-            $agent_phone = Agent::where('id',$file_data->agent_id)->first();
+            $agent_phone = Agent::where('id', $file_data->agent_id)->first();
             $agent_email = $agent_phone->email;
             $agent_phone = $agent_phone->phone;
 
-    //      Sms Data
+            //      Sms Data
 
-            $ie_name = Ie_data::where('id',$file_data->ie_data_id)->first();
+            $ie_name = Ie_data::where('id', $file_data->ie_data_id)->first();
             $ie_name = $ie_name->name;
-            $sms_data = 'B/E Number:'.$file_data->be_number .'. B/E Date: '.$file_data->be_date.'. '. $file_data->ie_type. '. Name: '. $ie_name .'. Manifest No: '. $file_data->manifest_no.'. Manifest Date: '.$file_data->manifest_date;
+            $sms_data = 'B/E Number:' . $file_data->be_number . '. B/E Date: ' . $file_data->be_date . '. ' . $file_data->ie_type . '. Name: ' . $ie_name . '. Manifest No: ' . $file_data->manifest_no . '. Manifest Date: ' . $file_data->manifest_date;
 
             //$email_data = 'B/E Number:'.$file_data->be_number .'.<br> B/E Date: '.$file_data->be_date.'.<br> '. $file_data->ie_type. '.<br> Name: '. $ie_name .'.<br> Manifest No: '. $file_data->manifest_no.'.<br> Manifest Date: '.$file_data->manifest_date;
 
-            $email_data = ['be_number'=>$file_data->be_number,'be_date'=>$file_data->be_date,'ie_type'=>$file_data->ie_type,'ie_name'=>$ie_name,'manifest_no'=>$file_data->manifest_no,'manifest_date'=>$file_data->manifest_date];
+            $email_data = ['be_number' => $file_data->be_number, 'be_date' => $file_data->be_date, 'ie_type' => $file_data->ie_type, 'ie_name' => $ie_name, 'manifest_no' => $file_data->manifest_no, 'manifest_date' => $file_data->manifest_date];
 
 
             //      SMS Function and API
 
-            function send_sms($sms_data, $agent_phone) {
+            function send_sms($sms_data, $agent_phone)
+            {
 
                 $url = "http://esms.dianahost.com/smsapi";
                 $data = [
@@ -393,8 +390,10 @@ class FileDataController extends Controller
                 return $response;
             }
 
-            $file_data_check = Data_user::where('file_data_id',$file_data->id)->where('user_id',Auth::user()->id)->get();
-            if (count($file_data_check) == '0'){
+            //      email Function
+
+            $file_data_check = Data_user::where('file_data_id', $file_data->id)->where('user_id', Auth::user()->id)->get();
+            if (count($file_data_check) == '0') {
                 $data_user = new Data_user();
                 $data_user->file_data_id = $file_data->id;
                 $data_user->user_id = Auth::user()->id;

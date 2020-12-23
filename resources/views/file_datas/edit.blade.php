@@ -88,7 +88,7 @@
                     <div class="form-group col-4">
                         {{Form::label('bin_no','BIN No:') }}
 
-                        {{Form::text('bin_no', $file_data->ie_data->bin_no ?? null, ['class' => 'form-control', 'placeholder' => 'BIN No', 'required']) }}
+                        {{Form::text('bin_no', $file_data->ie_data->bin_no ?? null, ['class' => 'form-control', 'placeholder' => 'BIN No']) }}
 
                         @error('bin_no')
                         <span>{{ $message }}</span>
@@ -210,10 +210,10 @@
                         {{Form::label('goods_type', 'Goods Type')}}
                         <div class="input-group mb-3">
                             {{-- {{Form::select('goods_type', ['Perishable'=>'Perishable','Non-Perishable'=>'Non-Perishable'], null, array('class' => 'form-control', 'placeholder' => 'Goods Type', 'required'  ))}} --}}
-                            
+
                             {{Form::radio('goods_type', 'Perishable', true,['class' => 'form-control','required'])}}
                             {{Form::label('Perishable')}}
-                            
+
                             {{Form::radio('goods_type', 'Non-Perishable', true,['class' => 'form-control','required'])}}
                             {{Form::label('Non-Perishable')}}
                         </div>
@@ -223,7 +223,7 @@
                         {{Form::label('be_number', 'B/E Number')}}
                         <div class="input-group mb-3">
                             {{Form::text('be_number', $next_be_number, array('class' => 'form-control', 'placeholder' => 'B/E Number', 'required'  ))}}
-                            
+
                         </div>
                     </div>
 
@@ -236,7 +236,7 @@
 
 
                     <div class="form-group col-4">
-                        {{Form::label('page', 'Pages')}}
+                        {{Form::label('page', 'Item')}}
                         <div class="input-group mb-3">
                             {{Form::number('page', null, array('class' => 'form-control', 'placeholder' => 'Pages', 'required'  ))}}
                         </div>

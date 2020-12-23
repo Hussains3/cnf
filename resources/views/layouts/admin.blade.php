@@ -16,12 +16,12 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" media='screen,print'>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.20/b-1.6.1/b-flash-1.6.1/b-html5-1.6.1/b-print-1.6.1/datatables.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous" />
 
     <!-- Font Awesome JS -->
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
-    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha512-F5QTlBqZlvuBEs9LQPqc1iZv2UMxcVXezbHzomzS6Df4MZMClge/8+gXrKw2fl5ysdk4rWjR0vKS7NNkfymaBQ==" crossorigin="anonymous"></script>
 
 </head>
 
@@ -51,6 +51,11 @@
                     <li>
                         <a href="/agents/create">New Agent</a>
                     </li>
+                    @role('admin')
+                    {{-- <li>
+                        <a href="{{route('agents.showDeactive')}}">Deactivated Agents</a>
+                    </li> --}}
+                    @endrole
                 </ul>
 
                 <hr style="margin: 0;">
@@ -102,6 +107,7 @@
                 @endrole
                 @role('admin')
                 {{-- user submenu --}}
+                <a href="{{route('gfiles.index')}}" class=""  >Green Files</a>
                 <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"  >User</a>
                 <ul class="{{ Request::path() === 'user' || Request::path() === 'user_adde' ? 'show ' : ''}}collapse list-unstyled"  id="userSubmenu">
                     <li>

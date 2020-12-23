@@ -18,7 +18,7 @@ class AgentController extends Controller
     {
         $i = 0;
         $agents = Agent::get();
-        return view('agents.index',compact('agents','i'));
+        return view('agents.index', compact('agents', 'i'));
     }
 
     /**
@@ -41,16 +41,8 @@ class AgentController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'ain_no' => 'required',
             'name' => 'required',
-            'owners_name' => 'sometimes',
-            'photo' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2024',
-            'destination' => 'sometimes',
-            'office_address' => 'sometimes',
             'phone' => 'sometimes',
-            'email' => 'sometimes',
-            'house' => 'sometimes',
-            'note' => 'sometimes'
         ]);
 
         $agent = new Agent();
@@ -67,13 +59,13 @@ class AgentController extends Controller
             $filename = uniqid() . '.' . $ext;
 
             //delete the previous image.
-//             Storage::delete("images/{$projectVerified->image}");
+            //             Storage::delete("images/{$projectVerified->image}");
 
             //upload the image
             $request->photo->move(public_path('images'), $filename);
 
             //this column has a default value so don't need to set it empty.
-            $agent->photo = 'images/'.$filename;
+            $agent->photo = 'images/' . $filename;
         }
 
         $agent->destination = $request->destination;
@@ -81,7 +73,7 @@ class AgentController extends Controller
         $agent->phone = $request->phone;
         $agent->email = $request->email;
         $agent->house = $request->house;
-//        $agent->note = $request->note;
+        //        $agent->note = $request->note;
         $agent->save();
 
         flash('New Agent Add Success.')->success();
@@ -100,6 +92,9 @@ class AgentController extends Controller
         //
     }
 
+
+
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -108,7 +103,7 @@ class AgentController extends Controller
      */
     public function edit(Agent $agent)
     {
-        return view('agents.edit',compact('agent'));
+        return view('agents.edit', compact('agent'));
     }
 
     /**
@@ -122,16 +117,8 @@ class AgentController extends Controller
     {
 
         $this->validate($request, [
-            'ain_no' => 'required',
             'name' => 'required',
-            'owners_name' => 'sometimes',
-            'photo' => 'sometimes|image|mimes:jpg,jpeg,png,gif|max:2024',
-            'destination' => 'sometimes',
-            'office_address' => 'sometimes',
             'phone' => 'sometimes',
-            'email' => 'sometimes',
-            'house' => 'sometimes',
-            'note' => 'sometimes'
         ]);
 
         $agent->ain_no = $request->ain_no;
@@ -149,13 +136,13 @@ class AgentController extends Controller
             $filename = uniqid() . '.' . $ext;
 
             //delete the previous image.
-             Storage::delete("images/{$agent->image}");
+            Storage::delete("images/{$agent->image}");
 
             //upload the image
             $request->photo->move(public_path('images'), $filename);
 
             //this column has a default value so don't need to set it empty.
-            $agent->photo = 'images/'.$filename;
+            $agent->photo = 'images/' . $filename;
         }
 
         $agent->destination = $request->destination;
@@ -179,6 +166,54 @@ class AgentController extends Controller
      */
     public function destroy(Agent $agent)
     {
-        //
+        // $agent = Agent::find($agent);
+        $agent->delete();
+        return redirect()->route('agents.index');
+    }
+
+
+
+    // show soft deleted data
+    public function showDeactive()
+    {
+        $tAgent = Agent::onlyTrashed();
+        return view('agents.trash', compact('tAgent'));
+    }
+
+    //======================
+
+
+    // Restore soft deleted data
+    public function restore($id)
+    {
+
+        $agent = Agent::onlyTrashed()->find($id);
+        $response = 'Something Wrong';
+
+        if (!is_null($agent)) {
+
+            $agent->restore();
+            $response = $this->successfulMessage(200, 'Successfully restored', true, $agent->count(), $agent);
+        } else {
+
+            return response($response);
+        }
+        return response($response);
+    }
+    // Premanent delete
+    public function permanentDeleteSoftDeleted($id)
+    {
+        $agent = Agent::onlyTrashed()->find($id);
+        $response = 'Something Wrong';
+
+        if (!is_null($agent)) {
+
+            $agent->forceDelete();
+            $response = $this->successfulMessage(200, 'Successfully deleted permanently', true, 0, $agent);
+        } else {
+
+            return response($response);
+        }
+        return response($response);
     }
 }

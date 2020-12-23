@@ -21,6 +21,7 @@ Route::resource('/agents', 'App\Http\Controllers\AgentController');
 Route::resource('/ie_datas', 'App\Http\Controllers\IeDataController');
 
 Route::resource('/file_datas', 'App\Http\Controllers\FileDataController');
+Route::resource('/gfiles', 'App\Http\Controllers\GfileController');
 //Route::any('/file_edit/{file_data}', 'App\Http\Controllers\FileDataController@file_edit');
 Route::any('/file_list', 'App\Http\Controllers\FileDataController@file_list');
 
@@ -28,6 +29,7 @@ Route::any('/file_list', 'App\Http\Controllers\FileDataController@file_list');
 //Route::get('get_expenses_report', 'Report@get_expenses_report')->name('get_expenses_report');
 
 
+Route::get('/showDeactive', 'App\Http\Controllers\AgentController@showDeactive')->name('showDeactive');
 
 
 Route::any('/receiver_report', 'App\Http\Controllers\Report@receiver_report');
@@ -71,7 +73,9 @@ Route::get('/get_monthly_final_report', 'App\Http\Controllers\Report@get_monthly
 
 
 
-Route::get('/support', function () { return view('support'); });
+Route::get('/support', function () {
+    return view('support');
+});
 
 
 
@@ -84,6 +88,3 @@ Route::resource('/users', 'App\Http\Controllers\UserController');
 
 
 Route::resource('/salary', 'App\Http\Controllers\SalaryController');
-
-
-

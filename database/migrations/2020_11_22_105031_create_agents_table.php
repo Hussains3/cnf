@@ -18,13 +18,14 @@ class CreateAgentsTable extends Migration
             $table->string('ain_no');
             $table->string('name');
             $table->string('owners_name');
-            $table->string('photo');
+            $table->string('photo')->nullable();
             $table->string('destination');
             $table->string('office_address');
             $table->string('phone');
             $table->string('email');
             $table->string('house');
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

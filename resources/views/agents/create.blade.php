@@ -15,7 +15,7 @@
                 <div class="form-group col-6">
                     {{Form::label('ain_no','AIN No:') }}
 
-                    {{Form::text('ain_no', null, ['class' => 'form-control', 'placeholder' => 'AIN No', 'required']) }}
+                    {{Form::text('ain_no', null, ['class' => 'form-control', 'placeholder' => 'AIN No']) }}
 
                     @error('ain_no')
                     <span>{{ $message }}</span>
@@ -37,7 +37,7 @@
                 <div class="form-group col-6 ">
                     {{Form::label('owners_name', 'Owner / Manager Name')}}
                     <div class="input-group mb-3">
-                        {{Form::text('owners_name', null, array('class' => 'form-control', 'placeholder' => 'Owner Name', 'required'  ))}}
+                        {{Form::text('owners_name', null, array('class' => 'form-control', 'placeholder' => 'Owner Name'))}}
                         @error('owners_name')
                         <span>{{ $message }}</span>
                         @enderror
@@ -60,7 +60,7 @@
                 <div class="form-group col-6">
                     {{Form::label('destination','Designation:') }}
 
-                    {{Form::text('destination', null, ['class' => 'form-control', 'placeholder' => 'Designation', 'required']) }}
+                    {{Form::text('destination', null, ['class' => 'form-control', 'placeholder' => 'Designation']) }}
 
                     @error('destination')
                     <span>{{ $message }}</span>
@@ -72,7 +72,7 @@
                 <div class="form-group col-6">
                     {{Form::label('office_address','Agent / Office Address:') }}
 
-                    {{Form::text('office_address', null, ['class' => 'form-control', 'placeholder' => 'Office Address', 'required']) }}
+                    {{Form::text('office_address', null, ['class' => 'form-control', 'placeholder' => 'Office Address']) }}
 
                     @error('office_address')
                     <span>{{ $message }}</span>
@@ -108,7 +108,7 @@
                 <div class="form-group col-12">
                     {{Form::label('house','House / Station') }}
 
-                    {{Form::text('house', null, ['class' => 'form-control', 'placeholder' => 'Station / House', 'required']) }}
+                    {{Form::text('house', 'Benapole', ['class' => 'form-control', 'placeholder' => 'Station / House', 'required']) }}
 
                     @error('house')
                     <span>{{ $message }}</span>
