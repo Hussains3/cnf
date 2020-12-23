@@ -158,6 +158,9 @@
                     <li>
                         <a href="/goods_report">Assessment Report Per Day</a>
                     </li>
+                    <li>
+                        <a href="/work_report_per_day">Work Report Per Day</a>
+                    </li>
 
                 </ul>
                 <hr style="margin: 0;">

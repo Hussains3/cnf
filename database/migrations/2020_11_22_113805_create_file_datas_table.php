@@ -28,7 +28,7 @@ class CreateFileDatasTable extends Migration
             $table->string('be_date')->nullable();
             $table->string('fees')->nullable();
             $table->string('page')->nullable();
-            $table->string('pages')->nullable();
+            $table->string('no_of_pages')->nullable();
 
             $table->string('status');
 

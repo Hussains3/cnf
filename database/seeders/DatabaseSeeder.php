@@ -13,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+
+
         $this->call(LaratrustSeeder::class);
-        $this->call(SalarySeeder::class);
-        $this->call(UserSeeder::class);
-        \App\Models\Gfile::factory(100)->create();
+
+        $users = \App\Models\User::factory(10)->create();
+        $users->each(function ($user) {
+            $user->attachRole('operator');
+        });
         \App\Models\Agent::factory(100)->create();
+        \App\Models\Ie_data::factory(100)->create();
+        \App\Models\File_data::factory(500)->create();
     }
 }

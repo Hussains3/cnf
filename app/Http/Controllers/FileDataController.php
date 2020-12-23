@@ -242,6 +242,9 @@ class FileDataController extends Controller
             $ie_data->house = $request->house;
             $ie_data->save();
 
+            $pages =  $request->page;
+            $numberofPages = ($pages  >  1) ? ceil((($pages - 1) / 3  + 1)) : 1;
+            return $numberofPages;
 
 
             $file_data->lodgement_no = $request->lodgement_no;
@@ -256,7 +259,11 @@ class FileDataController extends Controller
             $file_data->goods_type = $request->goods_type;
             $file_data->be_number = $request->be_number;
             $file_data->be_date = $request->be_date;
-            $file_data->page = $request->page;
+            $file_data->page = $pages;
+            $file_data->pages  = $numberofPages;
+
+
+
             $file_data->fees = $request->fees;
             $file_data->operator_id = Auth::user()->id;
             $file_data->status = 'Operated';

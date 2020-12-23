@@ -43,6 +43,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-//file_datas
+    //file_datas
 
 }
