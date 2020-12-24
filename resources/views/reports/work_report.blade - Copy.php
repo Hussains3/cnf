@@ -4,23 +4,37 @@
 
     <h2 id="tr" class="text-center">B/E Branch (Association) Custom House, Benapole</h2>
     <h2 id="tr" class="text-center">Work Report Sheet Per Day</h2>
-{{--
     <div class="card-header">
-        {!! Form::open(['route' => 'get_work_report', 'method' => 'POST']) !!}
+        <form>
             <div class="form-row">
 
-                    {!! Form::date('target_date', date('Y-m-d')) !!}
+                <div class="col-5">
+                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 4px 20px; border: 1px solid #ccc; width: 100%">
+                        <i class="mdi  mdi-calendar-clock"></i>&nbsp;
+                        <span></span> <i class="mdi mdi-arrow-down"></i>
+                    </div>
+                    <div class="input-daterange d-none">
+                        <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" readonly />
+                        <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" readonly />
 
-                    {!! Form::submit("Filter") !!}
+                    </div>
+                </div>
 
+                <div class="col ">
+                {{--{{Form::select('agent_id', $agents, null, ['id' => 'agent_id', 'class' => 'select2_op form-control','placeholder' => 'Select Agent', 'required'])}}--}}
+                </div>
+
+                <div class="col text-center">
+                    <button type="button" name="filter" id="filter" class="btn btn-primary" style="padding: .3rem 1rem;">Filter</button>
+                    <button type="button" name="refresh" id="refresh" class="btn btn-success" style="padding: .3rem 1rem;">Refresh</button>
+                </div>
             </div>
-       {!! Form::close() !!}
-    </div> --}}
+        </form>
+    </div>
 
 
     @if (!empty($work_sheet[0]) )
-    <button class="btn btn-md btn-info mb-4" onclick="printDiv('printMe')"> Print Report</button>
-    <div id='printMe'>
+
 
     <table id="daily_report" class="table table-striped table-bordered " style="width:100%">
         <thead>
@@ -89,33 +103,12 @@
         </tr>
         </tfoot>
     </table>
-    </div>
     @else
         <h3 class="text-center">No data Found On this date</h3>
     @endif
 @endsection
 
-@section('scripts')
-<script>
-    function printDiv(divName){
-        var printContents = document.getElementById(divName).innerHTML;
-        var originalContents = document.body.innerHTML;
 
-        document.body.innerHTML = printContents;
-
-        window.print();
-
-        document.body.innerHTML = originalContents;
-
-    }
-</script>
-
-
-
-
-@endsection
-
-{{--
 @section('scripts')
   <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
@@ -255,4 +248,4 @@
     </script>
 
 
-@endsection --}}
+@endsection

@@ -320,12 +320,13 @@ class Report extends Controller
     }
 
 
-    public function work_report_per_day()
+    public function work_report_per_day($date = '')
     {
         $i = 1;
         $users = User::get();
         $agents = Agent::pluck('name', 'id');
-        $date = "2021-08-17";
+        $date = !empty($date) ?: date('Y-m-d');
+
 
         $work_sheet = DB::table('file_datas')
             ->selectRaw(
@@ -342,63 +343,20 @@ class Report extends Controller
             ->groupBy('file_datas.operator_id')
             ->join('users', 'users.id', '=', 'file_datas.operator_id')
             ->get();
-        // return $work_sheet;
+        //return $work_sheet;
+
+        // if ($work_sheet != 0) {
+        //     # code...
+        // }
 
         return view('reports.work_report', compact('i', 'work_sheet'));
     }
 
     public function get_work_report(Request $request)
     {
-        if (request()->ajax()) {
-            if (!empty($request->target_date)) {
-                $qry = $request->target_date;
-                $i = 1;
 
-                $work_sheet = DB::table('file_datas')
-                    ->selectRaw(
-                        'users.`name`,
-                    SUM( IF(file_datas.page = 1,1,0) ) AS item_1,
-                    SUM( IF(file_datas.page BETWEEN 2 AND 4,1,0) ) AS item_2_4,
-                    SUM( IF(file_datas.page BETWEEN 5 AND 7,1,0) ) AS item_5_7,
-                    SUM( IF(file_datas.page BETWEEN 8 AND 9,1,0) ) AS item_8_9,
-                    SUM( IF(file_datas.page = 10 ,1,0) ) AS item_10,
-                    SUM(file_datas.page) AS TotalItem,
-                    SUM(file_datas.no_of_pages) AS total_pages'
-                    )
-                    ->whereDate('lodgement_date', '=', $qry)
-                    ->groupBy('file_datas.operator_id')
-                    ->join('users', 'users.id', '=', 'file_datas.operator_id')
-                    ->get();
-                // return $work_sheet;
-
-                return view('reports.work_report', compact('i', 'work_sheet'));
-            } else {
-                $date = date('Y-m-d');
-
-                $work_sheet = DB::table('file_datas')
-                    ->selectRaw(
-                        'users.`name`,
-                    SUM( IF(file_datas.page = 1,1,0) ) AS item_1,
-                    SUM( IF(file_datas.page BETWEEN 2 AND 4,1,0) ) AS item_2_4,
-                    SUM( IF(file_datas.page BETWEEN 5 AND 7,1,0) ) AS item_5_7,
-                    SUM( IF(file_datas.page BETWEEN 8 AND 9,1,0) ) AS item_8_9,
-                    SUM( IF(file_datas.page = 10 ,1,0) ) AS item_10,
-                    SUM(file_datas.page) AS TotalItem,
-                    SUM(file_datas.no_of_pages) AS total_pages'
-                    )
-                    ->whereDate('lodgement_date', '=', $date)
-                    ->groupBy('file_datas.operator_id')
-                    ->join('users', 'users.id', '=', 'file_datas.operator_id')
-                    ->get();
-                // return $work_sheet;
-
-                return view('reports.work_report', compact('i', 'work_sheet'));
-            }
-        }
+        return $this->work_report_per_day($request->target_date);
     }
-
-
-
 
 
     public function goods_report()

@@ -74,7 +74,7 @@ Route::get('/get_monthly_final_report', 'App\Http\Controllers\Report@get_monthly
 
 
 Route::get('/work_report_per_day', 'App\Http\Controllers\Report@work_report_per_day')->name('work_report_per_day');
-Route::get('/get_work_report', 'App\Http\Controllers\Report@get_work_report')->name('get_work_report');
+Route::post('/get_work_report', 'App\Http\Controllers\Report@get_work_report')->name('get_work_report');
 
 
 Route::get('/support', function () {

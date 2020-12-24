@@ -34,7 +34,7 @@ class File_dataFactory extends Factory
 
         return [
             'lodgement_no' => $this->faker->unique()->numberBetween(10000, 11000),
-            'lodgement_date' => $this->faker->dateTimeBetween('now', '+1 years'),
+            'lodgement_date' => $this->faker->dateTimeBetween('-3 month', '+2 month')->format('Y-m-d'),
             'manifest_no' => $this->faker->unique()->numberBetween(15000, 16000),
             'manifest_date' => $this->faker->date(),
             'group' => $this->faker->numberBetween(1, 9),
