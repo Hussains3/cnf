@@ -48,15 +48,17 @@
                     <li>
                         <a href="/agents">All Agents</a>
                     </li>
+                    @role('admin')
                     <li>
                         <a href="/agents/create">New Agent</a>
                     </li>
-                    @role('admin')
+
                     {{-- <li>
                         <a href="{{route('agents.showDeactive')}}">Deactivated Agents</a>
                     </li> --}}
                     @endrole
                 </ul>
+
 
                 <hr style="margin: 0;">
                 {{-- agents submenu --}}
@@ -72,8 +74,6 @@
 
 
                 <hr style="margin: 0;">
-
-                @role('receiver|operator|deliver')
                 {{-- datas submenu --}}
                 <a href="#dataSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"  >File Datas</a>
                 <ul class="{{ Request::path() === 'file_edit' || Request::path() === 'file_list' || Request::path() === 'file_datas' || Request::path() === 'file_datas/create' ? 'show ' : ''}}collapse list-unstyled"  id="dataSubmenu">
@@ -96,18 +96,12 @@
                             @endrole
                         </a>
                     </li>
-
-                    @role('admin|operator|deliver')
-                        <li>
-                            <a href="/file_list">Edit Datas</a>
-                        </li>
-                    @endrole
                 </ul>
-
-                @endrole
-                @role('admin')
+                @role('operator')
                 {{-- user submenu --}}
                 <a href="{{route('gfiles.index')}}" class=""  >Green Files</a>
+                @endrole
+                @role('admin')
                 <a href="#userSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"  >User</a>
                 <ul class="{{ Request::path() === 'user' || Request::path() === 'user_adde' ? 'show ' : ''}}collapse list-unstyled"  id="userSubmenu">
                     <li>
@@ -120,8 +114,9 @@
                         <a href="{{route('salary.create')}}">Add Salary</a>
                     </li>
                 </ul>
-
                 @endrole
+
+
 
                 <hr style="margin: 0;">
 
@@ -163,6 +158,7 @@
                     </li>
 
                 </ul>
+
                 <hr style="margin: 0;">
                 <a href="/support">Support</a>
             </li>

@@ -10,7 +10,7 @@
                     <strong class="card-title m-0">All Available Report</strong>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                    <lable>Date</lable>
+                    <label>Date</label>
                 </div>
                 <div class="col-5">
                     <div id="reportrange" style="background: #fff; cursor: pointer; padding: 4px 20px; border: 1px solid #ccc; width: 100%">
@@ -43,6 +43,8 @@
                 <th>Operator Name</th>
                 <th>Lodgement No</th>
                 <th>Manifest No</th>
+                <th>Received At</th>
+                <th>Delivered At</th>
                 <th>Page</th>
                 <th>Status</th>
             </tr>
@@ -54,6 +56,8 @@
             <th>Operator Name</th>
             <th>Lodgement No</th>
             <th>Manifest No</th>
+            <th>Received At</th>
+            <th>Delivered At</th>
             <th>Page</th>
             <th>Status</th>
         </tr>
@@ -133,9 +137,11 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
                         },
-                        { data: 'user.name', name: 'user.name'},
+                        { data: 'operator.name', name: 'operator.name'},
                         { data: 'file_data.lodgement_no', name: 'file_data.lodgement_no' },
                         { data: 'file_data.manifest_no', name: 'file_data.manifest_no' },
+                        { data: 'file_data.created_at', name: 'request.created_at' },
+                        { data: 'file_data.updated_at', name: 'request.updated_at' },
                         { data: 'file_data.page', name: 'file_data.page' },
                         { data: 'file_data.status', name: 'file_data.status' },
                     ],

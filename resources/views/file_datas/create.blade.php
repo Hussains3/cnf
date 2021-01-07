@@ -21,7 +21,7 @@
                     <div class="form-group col-6">
                         {{Form::label('lodgement_date', 'Lodgement Date')}}
                         <div class="input-group mb-3">
-                            {{Form::date('lodgement_date', \Carbon\Carbon::now(), array('class' => 'form-control', 'placeholder' => 'Lodgement Date', 'required'  ))}}
+                            {{Form::text('lodgement_date', $today, array('class' => 'form-control', 'id'=>'lodgement_date', 'placeholder' => 'Lodgement Date', 'required'  ))}}
                         </div>
                     </div>
 
@@ -35,14 +35,20 @@
                     <div class="form-group col-6">
                         {{Form::label('manifest_date', 'Manifest Date')}}
                         <div class="input-group mb-3">
-                            {{Form::date('manifest_date', \Carbon\Carbon::now(), array('class' => 'form-control', 'placeholder' => 'Manifest Date', 'required'  ))}}
+                            {{Form::text('manifest_date', $today, array('class' => 'form-control','id'=>'manifest_date', 'placeholder' => 'Manifest Date', 'required'  ))}}
                         </div>
                     </div>
 
                     <div class="form-group col-6">
                         {{Form::label('agent_id', 'Select Agent')}}
                         <div class="input-group mb-3">
-                            {{Form::select('agent_id', $agents, null, array('class' => 'form-control', 'placeholder' => 'Select Agent', 'required'  ))}}
+                            {{Form::select('agent_id', $agents, $lastagent, array('class' => 'opt_sel2 form-control', 'placeholder' => 'Select Agent', 'required'  ))}}
+
+                            {{-- <select name="" id="">
+                                @foreach ($agents as $item)
+                                    <option value="{{$item->id}}">{{$item->name.' ('.$item->ain_no.')' }}</option>
+                                @endforeach
+                            </select> --}}
                         </div>
                     </div>
 
@@ -78,6 +84,9 @@
 
 @section('scripts')
     <script>
+        $(document).ready(function() {
+            $('.opt_sel2').select2();
+        });
 
     </script>
 

@@ -50,7 +50,19 @@
                 <th>%</th>
             </tr>
         </thead>
-
+        @foreach($assReport as $goodreport)
+        <tr>
+            <td>{{$i++}}</td>
+            <td>{{$goodreport['name']}}</td>
+            <td>{{$goodreport['lodgement_date']}}</td>
+            <td>{{$goodreport['totalFiles']}}</td>
+            <td>{{$goodreport['TotalPerishable']}}</td>
+            <td>{{$goodreport['Waiting_G_F']}}</td>
+            <td>{{$goodreport['tp']}}</td>
+            <td>{{$goodreport['tpwgf']}}</td>
+            <td>{{$goodreport['prsnt']}}</td>
+        </tr>
+        @endforeach
         <tfoot>
         <tr>
             <th>No</th>
@@ -74,6 +86,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.20/filtering/row-based/range_dates.js"></script>
 
     <script !src="">
+        // load_data();
         // date rang picker
         $(function() {
             var start = moment().subtract(29, 'days');
@@ -140,14 +153,14 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
                         },
-                        { data: 'note', name: 'note' },
-                        { data: 'date', name: 'date' },
-                        { data: 'total', name: 'total', className: 'sum' },
-                        { data: 'Parisiable', name: 'Parisiable', className: 'sum' },
-                        { data: 'wgf', name: 'wgf', className: 'sum' },
+                        { data: 'name', name: 'name' },
+                        { data: 'lodgement_date', name: 'lodgement_date' },
+                        { data: 'totalFiles', name: 'totalFiles', className: 'sum' },
+                        { data: 'TotalPerishable', name: 'TotalPerishable', className: 'sum' },
+                        { data: 'Waiting_G_F', name: 'Waiting_G_F', className: 'sum' },
                         { data: 'tp', name: 'tp', className: 'sum' },
-                        { data: 'tpw', name: 'tpw', className: 'sum' },
-                        { data: 'pers', name: 'pers', className: 'sum' }
+                        { data: 'tpwgf', name: 'tpwgf', className: 'sum' },
+                        { data: 'prsnt', name: 'prsnt', className: 'sum' }
                     ],
 
                     "footerCallback": function(row, data, start, end, display) {

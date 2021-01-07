@@ -8,9 +8,11 @@
             <h2>All Agents</h2>
         </div>
         <div class="col text-right">
-
+            @role('admin')
             <a href="{{route('agents.create')}}" class="btn btn-primary">
-                <i class="mdi mdi-account-edit"></i> New Agent</a>
+                <i class="mdi mdi-account-edit"></i> New Agent
+            </a>
+            @endrole
         </div>
     </div>
 

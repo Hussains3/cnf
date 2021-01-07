@@ -19,8 +19,7 @@
         <table class="table is-narrow">
           <thead>
             <tr>
-              <th>id</th>
-              <th>Counter No</th>
+              <th>Sirial</th>
               <th>Name</th>
               <th>Email</th>
               <th>Date Created</th>
@@ -29,10 +28,12 @@
           </thead>
 
           <tbody>
+              @php
+                  $i = 1;
+              @endphp
             @foreach ($users as $user)
               <tr>
-                <th>{{$user->id}}</th>
-                <td>{{$user->counter}}</td>
+                <th>{{$i++}}</th>
                 <td>{{$user->name}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->created_at->toFormattedDateString()}}</td>
@@ -43,8 +44,6 @@
         </table>
       </div>
     </div> <!-- end of .card -->
-
-    {{$users->links()}}
   </div>
 
 @endsection

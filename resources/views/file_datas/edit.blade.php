@@ -53,7 +53,7 @@
                     <div class="form-group col-6">
                         {{Form::label('agent_id', 'Select Agent')}}
                         <div class="input-group mb-3">
-                            {{Form::select('agent_id', $agents, null, array('class' => 'form-control', 'placeholder' => 'Select Agent', 'required'  ))}}
+                            {{Form::select('agent_id', $agents, null, array('class' => 'opt_sel2 form-control', 'placeholder' => 'Select Agent', 'required'  ))}}
                         </div>
                     </div>
 
@@ -158,7 +158,7 @@
                     <div class="form-group col-4">
                         {{Form::label('phone','Phone Number:') }}
 
-                        {{Form::text('phone', $file_data->ie_data->phone ?? '', ['class' => 'form-control', 'placeholder' => 'Agent Phone Number', 'required']) }}
+                        {{Form::text('phone', $file_data->ie_data->phone ?? '', ['class' => 'form-control', 'placeholder' => 'Agent Phone Number']) }}
 
                         @error('phone')
                         <span>{{ $message }}</span>
@@ -190,15 +190,6 @@
 
                     </div>
                     <div class="card-accent-primary col-12 mb-3"></div>
-
-{{--                    <div class="form-group col-4 d-none">--}}
-{{--                        {{Form::label('ie_data_id', 'Select Importer / Exporter')}}--}}
-{{--                        <div class="input-group mb-3">--}}
-{{--                            {{Form::select('ie_data_id', $ie_datas, null, array('class' => 'form-control', 'placeholder' => 'Select Importer / Exporter', 'required'  ))}}--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-
-
                     <div class="form-group col-4">
                         {{Form::label('goods_name', 'Goods Name')}}
                         <div class="input-group mb-3">
@@ -222,7 +213,7 @@
                     <div class="form-group col-4">
                         {{Form::label('be_number', 'B/E Number')}}
                         <div class="input-group mb-3">
-                            {{Form::text('be_number', $next_be_number, array('class' => 'form-control', 'placeholder' => 'B/E Number', 'required'  ))}}
+                            {{Form::text('be_number', null, array('class' => 'form-control','min'=>'3', 'placeholder' => 'B/E Number', 'required'  ))}}
 
                         </div>
                     </div>
@@ -252,12 +243,27 @@
                     @endrole
 
                     <hr>
+                    @role('operator')
 
                     <div class="form-group col-12">
                         <div class="text-right">
-                            {{Form::submit('Deliver', ['class' => 'btn btn-primary'])}}
+                            {{Form::submit('Operate', ['class' => 'btn btn-primary'])}}
                         </div>
                     </div>
+                    @endrole
+                    @role('deliver')
+
+                        <div class="form-group col-12">
+                            <div class="text-right">
+                                {{-- {{Form::submit('Deliver', ['class' => 'btn btn-primary'])}} --}}
+                                {{-- <button type="submit" name="action1" class="btn btn-primary" value="deliver">Deliver</button> --}}
+                                <button type="submit" name="action" class="btn btn-secondary mx-2" value="print"><a href="{{route('file_datas.update',$file_data->id)}}" target="_blank">Deliver and Print</a></button>
+
+                            </div>
+                        </div>
+
+
+                    @endrole
 
                 </div>
                 {{ Form::close() }}
@@ -274,6 +280,10 @@
 
 @section('scripts')
 <script>
+    $(document).ready(function() {
+            $('.opt_sel2').select2();
+        });
+</script>
 
 @endsection
 

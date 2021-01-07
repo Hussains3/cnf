@@ -45,4 +45,9 @@ class User extends Authenticatable
 
     //file_datas
 
+    public function file_datas()
+    {
+
+        return $this->hasMany(File_data::class);
+    }
 }

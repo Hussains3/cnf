@@ -1,74 +1,75 @@
 @extends('layouts.admin')
 
 @section('content')
-    <style>
-        @media print {
-
-
-            table {
-                border-collapse: separate;
-                border: 0px solid #000000 !important;
-                border-spacing: 0;
-                font-size: 11pt;
-                width: 100%;
-                border-color: #000000;
-                border-right: 1px solid !important;
-
-            }
-
-            tr {
-                border-color: #000000 !important;
-                border-style: none;
-                border-width: 0;
-            }
-
-            td {
-                border-color: #000000 !important;
-                border-left: 1px solid !important;
-                border-bottom: 1px solid !important;
-            }
-
-            th {
-                border-color: #000000 !important;
-                border-left: 1px solid !important;
-                border-top: 1px solid !important;
-                border-bottom: 1px solid !important;
-            }
+<style>
+    @media print {
+        *{margin:0;padding:0;}
+        .pdn {
+            display: none;
         }
-    </style>
+        .pbg{
+            background-color: gray;
+        }
+        .date{
+            text-align: left !important;
+        }
+    }
+</style>
 
-<div id="print" style="margin-left: 40%;">
-
-    <div class="row">
-        <div class="col">
-            <h2 class="ml-4 mb-5">DAILY REPORT</h2>
+<div class="print" id="print">
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <h4>BENAPOLE CUSTOMS C&F AGENTS ASSOCIATION</h4>
         </div>
         <hr>
-        <div class="col-12">Date: {{\Carbon\Carbon::now()}}</div>
+        <div class="col-12 text-center mb-5">
+            <h5 class="pbg">DAILY REPORT</h5>
+        </div>
+        <div class="col-12 date text-center">Date: {{$date}}</div>
 
     </div>
-    <div class="row">
-        <table id="data" class="table is-narrow" style="width: 40%">
-            <thead>
-            <tr>
-                <th>Total B/E</th>
-                <th>Total Taka</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr>
-                <th>{{$total_file}}</th>
-                <th>{{$total_amount}}</th>
-
-            </tr>
-
-            </tbody>
-        </table>
+    <div class="row card pdn">
+        <div class="card-header">
+            {!! Form::open(['route' => 'get_daily_summary', 'method' => 'post']) !!}
+            @csrf
+                <div class="form-row">
+                    <div class="col-12">
+                        <div class="form-group form-inline m-0">
+                            {!! Form::label('date','Date') !!}
+                            {!! Form::date('date', $date , ['class'=>'form-control mx-2']) !!}
+                            {!! Form::submit('Filter', ['class'=>'btn btn-primary mx-2','style'=>'padding: .3rem 1rem;']) !!}
+                        </div>
+                    </div>
+                </div>
+            {!! Form::close() !!}
+        </div>
     </div>
-</div>
+    <div class="row mt-5">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <table id="data" class="table is-narrow table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Total B/E</th>
+                    <th class="text-center">Total Taka</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <th class="text-center">{{$total_file}}</th>
+                    <th class="text-center">{{$total_amount}}</th>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4"></div>
+
+    </div>
     <hr>
-<button class="btn btn-info text-center" style="margin-left: 60%" onclick="printDiv()">Print</button>
+<button class="pdn btn btn-info text-center" style="" onclick="printDiv()">Print</button>
+</div>
 
 
 @endsection
@@ -76,14 +77,12 @@
 @section('scripts')
     <script>
         function printDiv() {
-            var divContents = document.getElementById("print").innerHTML;
-            var a = window.open('', '', 'height=500, width=500');
-            a.document.write('<html>');
-            a.document.write('<body > <h2> <br>');
-            a.document.write(divContents);
-            a.document.write('</body></html>');
-            a.document.close();
-            a.print();
+            Popup($('#print').outerHTML);
+            function Popup(data)
+            {
+                window.print();
+                return true;
+            }
         }
     </script>
 @endsection

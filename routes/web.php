@@ -49,9 +49,11 @@ Route::get('/get_data_entry', 'App\Http\Controllers\Report@get_data_entry')->nam
 
 
 Route::get('/daily_summary', 'App\Http\Controllers\Report@daily_summary');
+Route::post('/get_daily_summary', 'App\Http\Controllers\Report@get_daily_summary')->name('get_daily_summary');
+
 
 Route::get('/daily_report', 'App\Http\Controllers\Report@daily_report');
-Route::get('/get_daily_report', 'App\Http\Controllers\Report@get_daily_report')->name('get_daily_report');
+Route::post('/get_daily_report', 'App\Http\Controllers\Report@get_daily_report')->name('get_daily_report');
 
 
 Route::get('/import_report', 'App\Http\Controllers\Report@import_report');

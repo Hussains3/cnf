@@ -21,10 +21,19 @@
                     <th>No</th>
                     <th>Manifest No</th>
                     <th>Manifest Date</th>
+
+                    @role('admin|operator')
                     <th>Lodgement No</th>
                     <th>Lodgement Date</th>
-                    @role('admin|operator|deliver')
+                    @endrole
+
+                    @role('deliver')
+                    <th>B/E No</th>
+                    <th>B/E Date</th>
+                    @endrole
                     <th>Agent Name</th>
+
+                    @role('admin|operator|deliver')
                     <th>Importer / Exporter</th>
                     @endrole
                     <th>Status</th>
@@ -38,10 +47,19 @@
                     <th>{{++$i}} </th>
                     <td>{{$file_data->manifest_no}}</td>
                     <td>{{$file_data->manifest_date}}</td>
+
+                    @role('admin|operator')
                     <td>{{$file_data->lodgement_no}}</td>
                     <td>{{$file_data->lodgement_date}}</td>
-                    @role('admin|operator|deliver')
+                    @endrole
+
+                    @role('deliver')
+                    <td>{{$file_data->be_number}}</td>
+                    <td>{{$file_data->be_date}}</td>
+                    @endrole
                     <td>{{$file_data->agent->name}}</td>
+
+                    @role('admin|operator|deliver')
                     <td>{{$file_data->ie_data->name ?? ''}}</td>
                     @endrole
 
@@ -55,7 +73,7 @@
                             {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
                             @if($file_data->status != 'Delivered' && $file_data->status != 'Printed')
                             <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">
-                                @role('admin|receiver')
+                                @role('admin')
                                 Edit
                                 @endrole
                                 @role('operator')
@@ -75,9 +93,21 @@
                             </a>
                             @endif
 
+                            @role('admin')
+
+                                <a class="btn btn-danger" href="{{ route('file_datas.destroy', $file_data->id) }}"
+                                    onclick="event.preventDefault(); document.getElementById('delete-form-{{ $file_data->id }}').submit();">
+                                    <i class="far fa-trash-alt"></i>
+                                    </a>
+
+                                    <form id="delete-form-{{ $file_data->id }}" action="{{ route('file_datas.destroy', $file_data->id) }}" method="POST" style="display: none;">
+                                        @method('DELETE')
+                                        @csrf
+                                    </form>
+                            @endrole
                             @role('deliver')
                             @if($file_data->status == 'Delivered' || $file_data->status == 'Printed')
-                                <a class="btn btn-danger" target="_blank" href="{{route('file_datas.show', $file_data->id)}}">Print </a>
+                                <a class="btn btn-danger" href="{{route('file_datas.show', $file_data->id)}}">Print </a>
                             @endif
                             @endrole
                         </form>

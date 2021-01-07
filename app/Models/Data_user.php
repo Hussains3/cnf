@@ -9,11 +9,17 @@ class Data_user extends Model
 {
     use HasFactory;
 
-    public function file_data(){
-        return $this->belongsTo(File_data::class) ;
+    public function file_data()
+    {
+        return $this->belongsTo(File_data::class);
     }
 
-    public function user(){
-        return $this->belongsTo(User::class) ;
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function operator()
+    {
+        return $this->belongsTo(User::class);
     }
 }

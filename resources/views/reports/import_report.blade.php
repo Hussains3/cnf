@@ -10,7 +10,7 @@
                     <strong class="card-title m-0">All Available Report</strong>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                    <lable>Date</lable>
+                    <label>Date</label>
                 </div>
                 <div class="col-5">
                     <div id="reportrange" style="background: #fff; cursor: pointer; padding: 4px 20px; border: 1px solid #ccc; width: 100%">
