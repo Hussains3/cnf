@@ -21,8 +21,13 @@ class SalaryFactory extends Factory
      */
     public function definition()
     {
+        $month = date('m', strtotime(date('m') . " -1 month"));
         return [
-            //
+            'year' => '2021',
+            'month' => '1',
+            'working_days' => 26,
+            'holiday' => $this->faker->numberBetween(1, 5),
+            'user_id' => $this->faker->numberBetween(1, 11)
         ];
     }
 }

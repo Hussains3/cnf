@@ -17,8 +17,8 @@ class CreateSalariesTable extends Migration
             $table->id();
             $table->integer('year')->nullable();
             $table->integer('month')->nullable();
-            $table->integer('absent')->nullable();
-            $table->bigInteger('work_point')->nullable();
+            $table->integer('holiday')->nullable();
+            $table->bigInteger('working_days')->nullable();
             $table->bigInteger('leave')->nullable();
             $table->integer('parcent')->nullable();
             $table->integer('add')->nullable();
@@ -28,7 +28,7 @@ class CreateSalariesTable extends Migration
             $table->foreign('user_id')->references('id')
                 ->on('users')->onUpdate('cascade')->onDelete('cascade');
 
-            
+
             $table->timestamps();
         });
     }

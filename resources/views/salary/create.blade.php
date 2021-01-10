@@ -13,14 +13,10 @@
             <div class="row">
 
                 <div class="form-group col-6">
-                    {{Form::label('user_name','User Name') }}
-                    <select name="user_name" class="form-control" placeholder="Name" required id="">
-                        @foreach ($users as $user)
-                            <option class="text-capitalize" value="{{$user->id}}">{{$user->name}}</option>
-                        @endforeach
-                    </select>
+                    {{Form::label('user_id','User Name') }}
+                    {!! Form::select('user_id', $users, null, ['class'=>'form-control', 'required']) !!}
 
-                    @error('user_name')
+                    @error('user_id')
                     <span>{{ $message }}</span>
                     @enderror
 
@@ -29,7 +25,7 @@
                 <div class="form-group col-6 ">
                     {{Form::label('year', 'Year')}}
                     <div class="input-group mb-3">
-                        {{Form::text('year', null, array('class' => 'form-control', 'placeholder' => '2020', 'required'  ))}}
+                        {{Form::text('year', date('Y'), array('class' => 'form-control','required'  ))}}
                         @error('year')
                         <span>{{ $message }}</span>
                         @enderror
@@ -41,20 +37,19 @@
                 <!-- Month Input Form -->
                 <div class="form-group col-6">
                     {{Form::label('month','Month') }}
-                    @php
-                        $months = array();
-                        for ($i = 0; $i < 12; $i++) {
-                            $timestamp = mktime(0, 0, 0, date('n') - $i, 1);
-                            $months[date('n', $timestamp)] = date('F', $timestamp);
-                        }
-                    @endphp
-                    
-                    <select name="month" class="form-control" id="month" required>
-                        <?php
-                            foreach ($months as $num => $name) {
-                                printf('<option value="%u">%s</option>', $num, $name);
-                            }
-                        ?>
+                    <select name="month" class="form-control" id="month" required="">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
                     </select>
 
                     @error('month')
@@ -65,11 +60,11 @@
 
                 <!-- Destination Input Form -->
                 <div class="form-group col-6">
-                    {{Form::label('work_day','Working Day') }}
+                    {{Form::label('working_days','Working Day') }}
 
-                    {{Form::text('work_day', 26, ['class' => 'form-control', 'placeholder' => 'Working day', 'required']) }}
+                    {{Form::number('working_days', 26, ['class' => 'form-control', 'placeholder' => 'Working day', 'required']) }}
 
-                    @error('work_day')
+                    @error('working_days')
                     <span>{{ $message }}</span>
                     @enderror
 
@@ -77,75 +72,17 @@
 
                 <!-- Destination Input Form -->
                 <div class="form-group col-6">
-                    {{Form::label('sat_day','Saterday') }}
+                    {{Form::label('holiday','Leave/Absent') }}
 
-                    {{Form::number('sat_day', 4, ['class' => 'form-control', 'placeholder' => 'Working day', 'required']) }}
+                    {{Form::number('holiday', 0, ['class' => 'form-control', 'placeholder' => 'Absent Day', 'required']) }}
 
-                    @error('sat_day')
+                    @error('holiday')
                     <span>{{ $message }}</span>
                     @enderror
 
                 </div>
 
-                <!-- Destination Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('leave','Leave/Absent') }}
 
-                    {{Form::number('leave', 0, ['class' => 'form-control', 'placeholder' => 'Absent Day', 'required']) }}
-
-                    @error('leave')
-                    <span>{{ $message }}</span>
-                    @enderror
-
-                </div>
-
-                <!-- Destination Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('work_point','Workpoint') }}
-
-                    {{Form::number('work_point', null, ['class' => 'form-control', 'placeholder' => 'Work point']) }}
-
-                    @error('work_point')
-                    <span>{{ $message }}</span>
-                    @enderror
-
-                </div>
-
-                <!-- Phone Number Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('parcent','Parcenteg') }}
-
-                    {{Form::number('parcent', null, ['class' => 'form-control', 'placeholder' => 'Parcenteg']) }}
-
-                    @error('parcent')
-                    <span>{{ $message }}</span>
-                    @enderror
-
-                </div>
-
-                <!-- Email Input Form -->
-                <div class="form-group col-6 ">
-                    {{Form::label('add','Add:') }}
-
-                    {{Form::number('add', null, ['class' => 'form-control', 'placeholder' => 'Add']) }}
-
-                    @error('add')
-                    <span>{{ $message }}</span>
-                    @enderror
-
-                </div>
-
-                <!-- Phone Number Input Form -->
-                <div class="form-group col-6">
-                    {{Form::label('final','Final') }}
-
-                    {{Form::text('final', null, ['class' => 'form-control', 'placeholder' => 'Final']) }}
-
-                    @error('final')
-                    <span>{{ $message }}</span>
-                    @enderror
-
-                </div>
 
                 <hr>
                 <div class="col-12">

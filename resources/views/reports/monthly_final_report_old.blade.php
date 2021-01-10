@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h2 id="tr" class="text-center">Operated File Report</h2>
+    <h2 id="tr" class="text-center">Monthly Final Report</h2>
     <div class="card-header">
         <form action = "" >
             <div class="form-row">
@@ -10,7 +10,7 @@
                     <strong class="card-title m-0">All Available Report</strong>
                 </div>
                 <div class="col-md-1 d-flex align-items-center justify-content-end">
-                    <label>Date</label>
+                    <label>Date(Lodgement)</label>
                 </div>
                 <div class="col-5">
                     <div id="reportrange" style="background: #fff; cursor: pointer; padding: 4px 20px; border: 1px solid #ccc; width: 100%">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col ">
-                    {{Form::select('agent_id', $agents, null, ['id' => 'agent_id', 'class' => 'select2_op form-control','placeholder' => 'Select Agent', 'required'])}}
+{{--                    {{Form::select('agent_id', $agents, null, ['id' => 'agent_id', 'class' => 'select2_op form-control','placeholder' => 'Select Agent', 'required'])}}--}}
                 </div>
 
                 <div class="col text-center">
@@ -36,31 +36,39 @@
         </form>
     </div>
 
-    <table id="all_report" class="table table-striped table-bordered " style="width:100%">
+    <table id="monthly_final_report" class="table table-striped table-bordered " style="width:100%">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Operator Name</th>
-                <th>Lodgement No</th>
-                <th>Manifest No</th>
-                <th>Received At</th>
-                <th>Delivered At</th>
-                <th>Page</th>
-                <th>Status</th>
+                <th>Name</th>
+                <th>Day</th>
+                <th>Files</th>
+                <th>Pages</th>
+                <th>Avarage</th>
+                <th>Holiday</th>
+                <th>Ave. Total</th>
+                <th>Work Point</th>
+                <th>%</th>
+                <th>Add</th>
+                <th>Final%</th>
             </tr>
         </thead>
 
         <tfoot>
-        <tr>
-            <th>No</th>
-            <th>Operator Name</th>
-            <th>Lodgement No</th>
-            <th>Manifest No</th>
-            <th>Received At</th>
-            <th>Delivered At</th>
-            <th>Page</th>
-            <th>Status</th>
-        </tr>
+            <tr>
+                <th>No</th>
+                <th>Name</th>
+                <th>Day</th>
+                <th>Files</th>
+                <th>Pages</th>
+                <th>Avarage</th>
+                <th>Holiday</th>
+                <th>Ave. Total</th>
+                <th>Work Point</th>
+                <th>%</th>
+                <th>Add</th>
+                <th>Final%</th>
+            </tr>
         </tfoot>
     </table>
 @endsection
@@ -108,26 +116,27 @@
 
             function load_data(from_date = '', to_date = '', agent_id = '')
             {
-                $('#all_report').DataTable({
+                $('#monthly_final_report').DataTable({
+
                     processing: true,
                     serverSide: true,
                     dom: 'lBftip',
                     buttons: [
                         {
                             extend: 'pdf',
-                            messageTop: 'Operated File Report',
+                            messageTop: 'File Report',
                             footer: true
                         },
                         'csv',
                         'excel',
                         {
                             extend: 'print',
-                            messageTop: '<h2>File Operated File Report ' +customer_name+ '</h2>',
+                            messageTop: '<h2>File Report ' +customer_name+ '</h2>',
                             footer: true
                         }
                     ],
                     ajax: {
-                        url:'{!! route("get_data_entry") !!}',
+                        url:'{!! route("get_monthly_final_report") !!}',
                         data:{from_date:from_date, to_date:to_date, agent_id:agent_id}
                     },
                     columns: [
@@ -137,13 +146,17 @@
                                 return meta.row + meta.settings._iDisplayStart + 1;
                             }
                         },
-                        { data: 'operator.name', name: 'operator.name'},
-                        { data: 'lodgement_no', name: 'lodgement_no' },
-                        { data: 'manifest_no', name: 'manifest_no' },
-                        { data: 'created_at', name: 'created_at' },
-                        { data: 'updated_at', name: 'updated_at' },
-                        { data: 'page', name: 'page' },
-                        { data: 'status', name: 'status' },
+                        { data: 'note', name: 'note' },
+                        { data: 'date', name: 'date' },
+                        { data: 'total', name: 'total', className: 'sum' },
+                        { data: 'Parisiable', name: 'Parisiable', className: 'sum' },
+                        { data: 'wgf', name: 'wgf', className: 'sum' },
+                        { data: 'tp', name: 'tp', className: 'sum' },
+                        { data: 'tpw', name: 'tpw', className: 'sum' },
+                        { data: 'pers', name: 'pers', className: 'sum' },
+                        { data: 'pers', name: 'pers', className: 'sum' },
+                        { data: 'pers', name: 'pers', className: 'sum' },
+                        { data: 'pers', name: 'pers', className: 'sum' }
                     ],
 
                     "footerCallback": function(row, data, start, end, display) {
@@ -173,17 +186,18 @@
                 var agent_id = $("#agent_id option:selected").val();
 
                 if (agent_id != ''){
-                    customer_name = '-'+ $("#agent_id option:selected").text();
-                    document.getElementById("tr").innerHTML = 'Operated File Report'+customer_name;
+                    // customer_name = '-'+ $("#agent_id option:selected").text();
+                    customer_name = '';
+                    document.getElementById("tr").innerHTML = 'Assessment Report Per Day'+customer_name;
                 }else {
                     customer_name = '';
-                    document.getElementById("tr").innerHTML = 'Operated File Report'+customer_name;
+                    document.getElementById("tr").innerHTML = 'Assessment Report Per Day'+customer_name;
                 }
 
 
                 if( from_date != '' &&  to_date != '')
                 {
-                    $('#all_report').DataTable().destroy();
+                    $('#monthly_final_report').DataTable().destroy();
                     load_data(from_date, to_date, agent_id);
                 }
                 else
@@ -196,9 +210,9 @@
                 $('#from_date').val('');
                 $('#to_date').val('');
                 $("#agent_id").select2().val('').trigger("change");
-                $('#all_report').DataTable().destroy();
+                $('#monthly_final_report').DataTable().destroy();
                 customer_name = '';
-                document.getElementById("tr").innerHTML = 'Operated File Report '+customer_name;
+                document.getElementById("tr").innerHTML = 'Assessment Report Per Day '+customer_name;
                 load_data();
             });
 

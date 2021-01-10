@@ -9,9 +9,9 @@ use App\Models\Goods_report;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\DB;
 
 class Report extends Controller
 {
@@ -132,14 +132,14 @@ class Report extends Controller
 
 
         $i = 0;
-        $users = Agent::pluck('name', 'id');
-        return view('reports.data_entry', compact('users', 'i'));
+        $agents = Agent::pluck('name', 'id');
+        return view('reports.data_entry', compact('file_datas', 'agents', 'i'));
     }
 
     public function get_data_entry(Request $request)
     {
 
-        //        return Data_user::with('file_data')->with('user')->get();
+
         if (request()->ajax()) {
             if (!empty($request->from_date)) {
 
@@ -156,38 +156,12 @@ class Report extends Controller
                 }
             } else {
 
-                //              $sales_date = Trip::orderBy('id', 'desc')->get();
-                //              $file_datas = File_data::with('agent')->with('ie_data')->get();
-
-                // $file_datas = Data_user::with('file_data')->with('operator')->where('status', '!=', 'Received')->get();
-
                 $file_datas = File_data::where('status', '!=', 'Received')->with(['agent', 'ie_data', 'operator'])->get();
             }
-            // $file_datas;
-
-            // return $file_datas[1]->created_at->format('H-i-s');
 
             return DataTables::of($file_datas)->make(true);
         }
     }
-
-    //-------------------------
-    // $projects = Project::select('id', 'name', 'date_start', 'date_end');
-    // return Datatables::of($projects)
-    // ->editColumn('date_start', function ($request) {return $request->date_start->format('Y-m-d');})
-    // ->editColumn('date_start', function ($request) {return $request->date_start->format('Y-m-d');})
-    // ->editColumn('date_end', function ($request) {
-    //     return $request->date_end->format('Y-m-d'); // human readable format
-    // })
-    // ->filterColumn('date_start', function ($query, $keyword) {
-    //     $query->whereRaw("DATE_FORMAT(date_start,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
-    // })
-    // ->filterColumn('date_end', function ($query, $keyword) {
-    //     $query->whereRaw("DATE_FORMAT(date_end,'%Y-%m-%d') like ?", ["%$keyword%"]); //date_format when searching using date
-    // })
-    // ->make(true);
-    //-------------------------
-
 
 
 
@@ -214,32 +188,26 @@ class Report extends Controller
         foreach ($file_datas as $file_datas) {
             $total_amount = $total_amount + $file_datas->fees;
         }
-        // return $file_datas;
         return view('reports.daily_summary', compact('total_file', 'total_amount', 'date'));
     }
+
 
 
 
     public function daily_report()
     {
         $date = Carbon::today();
-        //$file_datas = File_data::where('status','<>','Received')->whereDate('created_at',Carbon::today())->with('ie_data')->with('agent')->with('data_users')->get();
         $file_datas = File_data::with(['ie_data', 'agent', 'operator'])
             ->whereDate('created_at', $date)
             ->where('status', '<>', 'Received')
+            ->orderBy('be_number', 'asc')
             ->get();
-        //$file_datas = File_data::with(['ie_data','agent','operator'])->where('status', '<>', 'Received')->get();
-        // return $file_datas;
         $total_file = count($file_datas);
         $total_amount = 0;
         foreach ($file_datas as $file_data) {
             $total_amount = $total_amount + $file_data->fees;
         }
-
         $users = User::pluck('name', 'id');
-
-
-
         return view('reports.daily_report', compact('file_datas', 'users', 'total_amount', 'total_file', 'date'));
     }
 
@@ -248,20 +216,18 @@ class Report extends Controller
     public function get_daily_report(Request $request)
     {
 
-
         $date = $request->to_date;
         $file_datas = File_data::with(['ie_data', 'agent', 'operator'])
             ->whereDate('created_at', $date)
             ->where('status', '<>', 'Received')
+            ->orderBy('be_number', 'asc')
             ->get();
         $total_file = count($file_datas);
         $total_amount = 0;
         foreach ($file_datas as $file_data) {
             $total_amount = $total_amount + $file_data->fees;
         }
-
         $users = User::pluck('name', 'id');
-
         return view('reports.daily_report', compact('file_datas', 'users', 'total_amount', 'total_file', 'date'));
     }
 
@@ -336,33 +302,73 @@ class Report extends Controller
     public function monthly_final_report()
     {
         $i = 0;
-        $users = User::get();
-        //$file_datas = File_data::get();
-        $agents = Agent::pluck('name', 'id');
-        return view('reports.monthly_final_report', compact('agents', 'i'));
+        $date = date('m');
+        // $users = User::where()->get();
+        $users = User::whereRoleIs('operator')->orderBy('name', 'asc')->pluck('name', 'id');
+        // return $users;
+        // $month = date('m', strtotime(date('m')));
+        // return $month;
+
+        /*
+            SELECT
+	users.`name`,
+	SUM(file_datas.page) AS totalFile,
+	SUM(file_datas.no_of_pages) AS totalPage,
+		(SELECT
+	salaries.working_days
+FROM
+	salaries
+WHERE
+	salaries.user_id = file_datas.operator_id AND
+	salaries.`year` = 2021 AND
+	salaries.`month` = 1 ) as Day,
+
+	(SELECT
+	salaries.holiday
+FROM
+	salaries
+WHERE
+	salaries.user_id = file_datas.operator_id AND
+	salaries.`year` = 2021 AND
+	salaries.`month` = 1 ) as holiday
+FROM
+	file_datas
+	INNER JOIN
+	users
+	ON
+		file_datas.operator_id = users.id
+	INNER JOIN
+	salaries
+	ON
+		users.id = salaries.user_id
+WHERE
+	file_datas.created_at BETWEEN "2021-01-01" AND "2021-01-31"
+GROUP BY
+	file_datas.operator_id
+
+        */
+
+
+        $userSalary = DB::table('salaries')
+            ->selectRaw(
+                'users.`name`,
+                SUM( IF(file_datas.page = 1,1,0) ) AS item_1,
+                SUM(file_datas.page) AS TotalItem,
+                SUM(file_datas.no_of_pages) AS total_pages'
+            )
+            ->where('month', '=', $date)
+            ->groupBy('users.name')
+            ->join('users', 'users.id', '=', 'file_datas.operator_id')
+            ->get();
+        return $userSalary;
+        return view('reports.monthly_final_report', compact('i', 'users', 'userSalary'));
     }
-    public function get_monthly_final_report(Request $request)
-    {
-        if (request()->ajax()) {
-            if (!empty($request->from_date)) {
-                $startdate = $request->from_date;
-                $enddate = $request->to_date;
-                //                $agent_id = $request->agent_id;
-
-                $query = 'date(date) between "' . $startdate . '" AND "' . $enddate . '"';
-                $file_datas = Goods_report::whereRaw($query)->get();
-            } else {
-                //              $sales_date = Trip::orderBy('id', 'desc')->get();
-                //                $file_datas = File_data::with('agent')->with('ie_data')->get();
-                $file_datas = Goods_report::get();
-            }
-
-            return DataTables::of($file_datas)->make(true);
-        }
-    }
 
 
-    public function work_report_per_day($date = '')
+
+
+
+    public function work_report_per_day($date = "2020-12-21")
     {
         $i = 1;
         $users = User::get();
@@ -385,12 +391,12 @@ class Report extends Controller
             ->groupBy('users.name')
             ->join('users', 'users.id', '=', 'file_datas.operator_id')
             ->get();
-        //return $work_sheet;
+        // return $work_sheet;
 
         // if ($work_sheet != 0) {
         //     # code...
         // }
-
+        //   return  $date;
         return view('reports.work_report', compact('i', 'work_sheet'));
     }
 
@@ -400,14 +406,15 @@ class Report extends Controller
         return $this->work_report_per_day($request->target_date);
     }
 
+
     //monthly asesment report with gf ==================================start
-    public function goods_report()
+    public function goods_report(Request $request)
     {
         $i = 0;
         $startDate = Carbon::now(); //returns current day
-        $first = $startDate->firstOfMonth()->toDateString();
-        $last = $startDate->lastOfMonth()->toDateString();
-        // return $last;
+        $first = $request->from_date ?? "2020-12-01";
+        $last = $request->to_date ?? "2020-12-31";
+        $name = null;
 
         $assReportQ = DB::table('file_datas')
             ->selectRaw(
@@ -415,7 +422,7 @@ class Report extends Controller
                 file_datas.lodgement_date,
                 SUM(file_datas.page) AS totalFiles,
                 SUM( IF(file_datas.goods_type = "Perishable" ,1,0) ) AS TotalPerishable,
-                (SELECT gfiles.waitingGreenFile FROM gfiles WHERE gfiles.assesmentDate = file_datas.lodgement_date LIMIT 1 ) as Waiting_G_F'
+               IFNULL( (SELECT gfiles.waitingGreenFile FROM gfiles WHERE gfiles.assesmentDate = file_datas.lodgement_date LIMIT 1 ), 0) as Waiting_G_F'
             )
             ->whereBetween('lodgement_date', [$first, $last])
             ->groupBy('users.name', 'file_datas.lodgement_date')
@@ -423,77 +430,14 @@ class Report extends Controller
             ->orderBy('users.name', "asc")
             ->get();
 
-        $collection = collect($assReportQ);
-        $assReport = $collection->map(function ($item) {
-            // return $item;
-            $newItem = collect($item);
-            // return $newItem;
 
-            $tf = $item->totalFiles;
-            $p = $item->TotalPerishable;
-            $wgf = $item->Waiting_G_F;
-            $prsnt = round(((($tf - $p) - $wgf) * 100) /  $tf);
-            // return round($prsnt);
+        $reportItems = $assReportQ->map(function ($item) {
 
-            $concatenated = $newItem
-                ->merge(['tp' => $tf - $p, 'tpwgf' => ($tf - $p) - $wgf, 'prsnt' =>  $prsnt]);
-            // ->push(['tpwgf' => ($tf - $p) - $wgf])
-            // ->push(['prsnt' => ((($tf - $p) - $wgf) * 100) /  $tf]);
-            $concated = $concatenated->all();
-            return $concated;
+            $tp = $item->totalFiles - $item->TotalPerishable;
+            $tpgf = $tp -  $item->Waiting_G_F;
+            $percentage = round(($tpgf * 100) / $item->totalFiles, 2);
+            return    collect($item)->merge(['tp' => $tp, 'tpgf' => $tpgf, 'percentage' => $percentage]);
         });
-        // return $collection->name;
-        // return $assReport;
-
-
-        return view('reports.goods_report', compact('assReport', 'i'));
-        // return DataTables::of($assReport)->make(true);
+        return view('reports.goods_report', compact('reportItems', 'i', 'name'));
     }
-
-    public function get_goods_report(Request $request)
-    {
-        if (request()->ajax()) {
-            if (!empty($request->from_date)) {
-                $startdate = $request->from_date;
-                $enddate = $request->to_date;
-
-                $assReportQ = DB::table('file_datas')
-                    ->selectRaw(
-                        'users.`name`,
-                        file_datas.lodgement_date,
-                        SUM(file_datas.page) AS totalFiles,
-                        SUM( IF(file_datas.goods_type = "Perishable" ,1,0) ) AS TotalPerishable,
-                        (SELECT gfiles.waitingGreenFile FROM gfiles WHERE gfiles.assesmentDate = file_datas.lodgement_date LIMIT 1 ) as Waiting_G_F'
-                    )
-                    ->whereBetween('lodgement_date', [$startdate, $enddate])
-                    ->groupBy('users.name', 'file_datas.lodgement_date')
-                    ->join('users', 'users.id', '=', 'file_datas.operator_id')
-                    ->orderBy('users.name', "asc")
-                    ->get();
-                $collection = collect($assReportQ);
-                $assReport = $collection->map(function ($item) {
-                    // return $item;
-                    $newItem = collect($item);
-                    // return $newItem;
-
-                    $tf = $item->totalFiles;
-                    $p = $item->TotalPerishable;
-                    $wgf = $item->Waiting_G_F;
-                    $prsnt = round(((($tf - $p) - $wgf) * 100) /  $tf);
-                    // return round($prsnt);
-
-                    $concatenated = $newItem
-                        ->merge(['tp' => $tf - $p, 'tpwgf' => ($tf - $p) - $wgf, 'prsnt' =>  $prsnt]);
-                    // ->push(['tpwgf' => ($tf - $p) - $wgf])
-                    // ->push(['prsnt' => ((($tf - $p) - $wgf) * 100) /  $tf]);
-                    $concated = $concatenated->all();
-                    return $concated;
-                });
-            } else {
-                $file_datas = Goods_report::get();
-            }
-            return DataTables::of($assReport)->make(true);
-        }
-    }
-    //monthly asesment report with gf ==================================end
 }

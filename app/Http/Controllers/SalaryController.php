@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Salary;
 use Illuminate\Http\Request;
@@ -25,10 +26,11 @@ class SalaryController extends Controller
     public function create()
     {
         $i = 0;
-        $users = User::all();
+        // $users = User::all();
+        $users = User::whereRoleIs('operator')->orderBy('name', 'asc')->pluck('name', 'id');
 
-        
-        return view('salary.create',compact('users','i'));
+
+        return view('salary.create', compact('users', 'i'));
     }
 
     /**
@@ -37,22 +39,11 @@ class SalaryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Salary $salary)
     {
         //
+        $salary->create($request->all()); 
 
-        $absent = $request->leave;
-
-        $salary = new Salary();
-        $salary->year = $request->year;
-        $salary->month = $request->month;
-        $salary->absent = $absent;
-        $salary->work_point = $request->work_point;
-        $salary->parcent = $request->parcent;
-        $salary->add = $request->add;
-        $salary->final = $request->final;
-        $salary->user_id = $request->user_name;
-        $salary->save();
 
         return back();
     }
