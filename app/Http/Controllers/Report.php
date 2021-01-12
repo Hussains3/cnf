@@ -133,6 +133,8 @@ class Report extends Controller
 
         $i = 0;
         $agents = Agent::pluck('name', 'id');
+        $file_datas = File_data::where('status', '!=', 'Received')->with(['agent', 'ie_data', 'operator'])->get();
+
         return view('reports.data_entry', compact('file_datas', 'agents', 'i'));
     }
 
@@ -299,69 +301,80 @@ class Report extends Controller
 
 
 
-    public function monthly_final_report()
+    public function monthly_final_report(Request $request)
     {
         $i = 0;
         $date = date('m');
-        // $users = User::where()->get();
+
+        $currentDate = Carbon::now();
+        $startDate = $currentDate->firstOfMonth()->toDateString();
+        $endDate = $currentDate->lastOfMonth()->toDateString();
+        $year = date('Y');
+        $month = date('m');
+
+        // return $startDate;
         $users = User::whereRoleIs('operator')->orderBy('name', 'asc')->pluck('name', 'id');
-        // return $users;
-        // $month = date('m', strtotime(date('m')));
-        // return $month;
-
-        /*
-            SELECT
-	users.`name`,
-	SUM(file_datas.page) AS totalFile,
-	SUM(file_datas.no_of_pages) AS totalPage,
-		(SELECT
-	salaries.working_days
-FROM
-	salaries
-WHERE
-	salaries.user_id = file_datas.operator_id AND
-	salaries.`year` = 2021 AND
-	salaries.`month` = 1 ) as Day,
-
-	(SELECT
-	salaries.holiday
-FROM
-	salaries
-WHERE
-	salaries.user_id = file_datas.operator_id AND
-	salaries.`year` = 2021 AND
-	salaries.`month` = 1 ) as holiday
-FROM
-	file_datas
-	INNER JOIN
-	users
-	ON
-		file_datas.operator_id = users.id
-	INNER JOIN
-	salaries
-	ON
-		users.id = salaries.user_id
-WHERE
-	file_datas.created_at BETWEEN "2021-01-01" AND "2021-01-31"
-GROUP BY
-	file_datas.operator_id
-
-        */
 
 
-        $userSalary = DB::table('salaries')
+        $userSalary = DB::table('file_datas')
             ->selectRaw(
                 'users.`name`,
-                SUM( IF(file_datas.page = 1,1,0) ) AS item_1,
-                SUM(file_datas.page) AS TotalItem,
-                SUM(file_datas.no_of_pages) AS total_pages'
+                SUM(file_datas.page) AS totalFile,
+                SUM(file_datas.no_of_pages) AS totalPage,
+                (SELECT
+                    salaries.working_days
+                FROM
+                    salaries
+                WHERE
+                    salaries.user_id = file_datas.operator_id AND
+                    salaries.`year` = ' . $year . ' AND
+                    salaries.`month` = ' . $month . ' ) as day,
+                (SELECT
+                    salaries.holiday
+                FROM
+                    salaries
+                WHERE
+                    salaries.user_id = file_datas.operator_id AND
+                    salaries.`year` = ' . $year . ' AND
+                    salaries.`month` = ' . $month . ' ) as holiday'
             )
-            ->where('month', '=', $date)
-            ->groupBy('users.name')
-            ->join('users', 'users.id', '=', 'file_datas.operator_id')
+            ->whereBetween('file_datas.created_at', [$startDate, $endDate])
+            ->groupBy('file_datas.operator_id')
+            // ->groupBy('users.name')
+            ->join('users', 'file_datas.operator_id', '=', 'users.id')
+            ->join('salaries', 'users.id', '=', 'salaries.user_id')
+            // ->toSql();
             ->get();
-        return $userSalary;
-        return view('reports.monthly_final_report', compact('i', 'users', 'userSalary'));
+
+        // return $userSalary;
+        $totalWorkPoint = $userSalary->map(function ($item) {
+            $page = $item->totalPage;
+            $day = $item->day - $item->holiday;
+            $average = ($item->totalFile) / $day;
+            $avgTotal = ($average * $item->holiday) + $item->totalFile;
+            $wp = ((((($page / $day) * $item->holiday) + $page) - $avgTotal) / 2) + $avgTotal;
+            return $wp;
+        })->sum();
+
+        $final = $userSalary->map(function ($item) use ($totalWorkPoint) {
+            $page = $item->totalPage;
+            $day = $item->day - $item->holiday;
+            $average = ($item->totalFile) / $day;
+            $avgTotal = ($average * $item->holiday) + $item->totalFile;
+            $wp = ((((($page / $day) * $item->holiday) + $page) - $avgTotal) / 2) + $avgTotal;
+
+            $parcent = (100 * $wp) / $totalWorkPoint;
+            $fin = round($parcent + 80, 4);
+
+            return ['name' => $item->name, 'rank' => $fin];
+        });
+        $sorted = $final->sortByDesc('rank');
+
+        $rankList = $sorted->values()->all();
+
+
+        // return $totalWorkPoint;
+        return view('reports.monthly_final_report', compact('i', 'users', 'userSalary', 'totalWorkPoint', 'rankList'));
     }
 
 

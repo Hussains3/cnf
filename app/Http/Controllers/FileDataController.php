@@ -217,6 +217,7 @@ class FileDataController extends Controller
             $file_data->manifest_date = $mnfd;
             $file_data->agent_id = $request->agent_id;
             $file_data->group = $request->group;
+            // $file_data->operator_id = Auth::user()->id;
             $file_data->save();
             return redirect()->route('file_datas.create');
         }
@@ -389,6 +390,15 @@ class FileDataController extends Controller
             $file_data->be_date = $request->be_date;
             $file_data->page = $request->page;
             $file_data->no_of_pages  = $numberofPages;
+
+
+            // $file_data->operator_id = Auth::user()->id;
+
+            // if (Auth::user()->hasRole('admin')) {
+            //
+            //     $file_data->status = 'Operated';
+            // }
+
 
             $file_data->fees = $request->fees;
             $file_data->status = 'Delivered';

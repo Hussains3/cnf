@@ -22,18 +22,18 @@
     <button class="btn btn-md btn-info mb-4" onclick="printDiv('printMe')"> Print Report</button>
     <div id='printMe'>
 
-    <table id="daily_report" class="table table-striped table-bordered " style="width:100%">
+    <table id="daily_report" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th class="text-center">Date:</th>
                 <th class="text-center">{{date('d-m')}}</th>
                 <th class="text-center" colspan="2">{{date('Y')}}</th>
                 <th class="text-center" colspan="4"></th>
-                <th class="text-center">{{515}}</th>
-                <th class="text-center">(+)</th>
-                <th class="text-center">18</th>
-                <th class="text-center">311</th>
-                <th class="text-center" colspan="2">P/1</th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
+                <th class="text-center" colspan="2"></th>
                 <th class="text-center"></th>
             </tr>
         </thead>
@@ -44,7 +44,7 @@
             <td class="text-center">Total Item</td>
         </tr>
         <tr>
-            <td class="text-center" rowspan="2" class="align-middle text-center align-items-center">{{$i++}}</td>
+            <td class="text-center align-middle" rowspan="2" class="align-middle text-center align-items-center">{{$i++}}</td>
             <td class="text-center">Item 1</td>
             <td class="text-center" colspan="2">Item 2-4</td>
             <td class="text-center" colspan="2">Item 5-7</td>
@@ -52,7 +52,7 @@
             <td class="text-center" colspan="2">Item 10 +</td>
             <td class="text-center" colspan="2">Note</td>
             <td class="text-center" colspan="2">Pages</td>
-            <td class="text-center" rowspan="3">{{$totalFileData[] = $file_data->TotalItem}}</td>
+            <td class="text-center align-middle" rowspan="3">{{$totalFileData[] = $file_data->TotalItem}}</td>
         </tr>
         <tr>
             <td class="text-center">{{$file_data->item_1}}</td>

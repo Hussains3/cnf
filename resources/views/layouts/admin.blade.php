@@ -53,9 +53,9 @@
                         <a href="/agents/create">New Agent</a>
                     </li>
 
-                    {{-- <li>
-                        <a href="{{route('agents.showDeactive')}}">Deactivated Agents</a>
-                    </li> --}}
+                    <li>
+                        <a href="/showDeactive">Deactivated Agents</a>
+                    </li>
                     @endrole
                 </ul>
 

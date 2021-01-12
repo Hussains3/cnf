@@ -176,11 +176,14 @@ class AgentController extends Controller
     // show soft deleted data
     public function showDeactive()
     {
-        $tAgent = Agent::onlyTrashed();
-        return view('agents.trash', compact('tAgent'));
+        $i = 0;
+        $tAgent = Agent::onlyTrashed()->get();
+        // return $tAgent;
+        return view('agents.trash', compact('tAgent', 'i'));
     }
 
     //======================
+
 
 
     // Restore soft deleted data
@@ -200,6 +203,7 @@ class AgentController extends Controller
         }
         return response($response);
     }
+
     // Premanent delete
     public function permanentDeleteSoftDeleted($id)
     {

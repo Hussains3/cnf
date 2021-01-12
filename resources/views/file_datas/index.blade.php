@@ -21,9 +21,10 @@
                     <th>No</th>
                     <th>Manifest No</th>
                     <th>Manifest Date</th>
+                    <th>Lodgement No</th>
 
                     @role('admin|operator')
-                    <th>Lodgement No</th>
+
                     <th>Lodgement Date</th>
                     @endrole
 
@@ -47,9 +48,10 @@
                     <th>{{++$i}} </th>
                     <td>{{$file_data->manifest_no}}</td>
                     <td>{{$file_data->manifest_date}}</td>
+                    <td>{{$file_data->lodgement_no}}</td>
+
 
                     @role('admin|operator')
-                    <td>{{$file_data->lodgement_no}}</td>
                     <td>{{$file_data->lodgement_date}}</td>
                     @endrole
 
@@ -66,50 +68,50 @@
                     <td>{{$file_data->status}}</td>
 
                     <td class="has-text-right">
-                        {{-- <a class="btn btn-outline-success" href="{{route('purchase.show', $purchase->id)}}">View </a> --}}
                         <form action="{{ route('file_datas.destroy',$file_data->id) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
-                            @if($file_data->status != 'Delivered' && $file_data->status != 'Printed')
-                            <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">
-                                @role('admin')
-                                Edit
-                                @endrole
-                                @role('operator')
-                                    @if($file_data->status == 'Operated' || $file_data->status == 'Delivered')
-                                        Edit
-                                    @else
-                                        Operate
-                                    @endif
-                                @endrole
-                                @role('deliver')
-                                    @if($file_data->status == 'Delivered')
-                                        Edit
-                                    @else
-                                        Deliver
-                                    @endif
-                                @endrole
-                            </a>
-                            @endif
 
                             @role('admin')
-
+                                <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">Edit</a>
                                 <a class="btn btn-danger" href="{{ route('file_datas.destroy', $file_data->id) }}"
-                                    onclick="event.preventDefault(); document.getElementById('delete-form-{{ $file_data->id }}').submit();">
-                                    <i class="far fa-trash-alt"></i>
+                                onclick="event.preventDefault(); document.getElementById('delete-form-{{ $file_data->id }}').submit();">
+                                <i class="far fa-trash-alt"></i>
+                                </a>
+
+                                <form id="delete-form-{{ $file_data->id }}" action="{{ route('file_datas.destroy', $file_data->id) }}" method="POST" style="display: none;">
+                                    @method('DELETE')
+                                    @csrf
+                                </form>
+                            @endrole
+
+                            @role('operator')
+                                @if($file_data->status == 'Operated' || $file_data->status == 'Received')
+
+                                    <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">
+                                            @if($file_data->status == 'Operated')
+                                                Edit
+                                            @else
+                                                Operate
+                                            @endif
                                     </a>
 
-                                    <form id="delete-form-{{ $file_data->id }}" action="{{ route('file_datas.destroy', $file_data->id) }}" method="POST" style="display: none;">
-                                        @method('DELETE')
-                                        @csrf
-                                    </form>
+                                @endif
                             @endrole
+
                             @role('deliver')
-                            @if($file_data->status == 'Delivered' || $file_data->status == 'Printed')
-                                <a class="btn btn-danger" href="{{route('file_datas.show', $file_data->id)}}">Print </a>
-                            @endif
+                                @if ($file_data->status != 'Received')
+                                    @if($file_data->status == 'Operated')
+                                        <a class="btn btn-info" href="{{route('file_datas.edit', $file_data->id)}}">Deliver</a>
+                                    @elseif($file_data->status == 'Printed')
+                                        <a class="btn btn-danger" href="{{route('file_datas.show', $file_data->id)}}">Print </a>
+                                    @endif
+                                @endif
                             @endrole
+
+
+
+
                         </form>
                     </td>
                 </tr>

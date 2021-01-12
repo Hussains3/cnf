@@ -56,7 +56,7 @@
                             {{-- <button type="submit" class="btn btn-danger">Delete</button> --}}
 
                             @role('admin')
-                            <a class="btn btn-info" href="{{route('agents.edit', $agent->id)}}"> Restore</a>
+                            {{-- <a class="btn btn-info" href="{{route('agents.edit', $agent->id)}}"> Restore</a> --}}
                             @endrole
 
 
