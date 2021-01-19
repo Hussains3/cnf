@@ -72,6 +72,10 @@
             <td class="text-center"></td>
             <td class="text-center"></td>
             <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
+            <td class="text-center"></td>
         </tr>
         @endforeach
 
@@ -80,11 +84,11 @@
         <tr class="">
             <th class="text-center"  colspan="2"></th>
             <th class="text-center"  colspan="3">Alltotal</th>
-            <th class="text-center"  colspan="3">511</th>
-            <th class="text-center"  >(+)</th>
-            <th class="text-center" >16</th>
+            <th class="text-center"  colspan="3">{{array_sum($totalFilePages)}}</th>
+            <th class="text-center" >(+)</th>
+            <th class="text-center" >0</th>
             <th class="text-center" >(=)</th>
-            <th class="text-center"  colspan="4">{{array_sum($totalFilePages)}}</th>
+            <th class="text-center"  colspan="3">{{array_sum($totalFilePages)}}</th>
             <th class="text-center" >{{array_sum($totalFileData)}}</th>
         </tr>
         </tfoot>
