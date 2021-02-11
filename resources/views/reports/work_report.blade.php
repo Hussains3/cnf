@@ -4,29 +4,36 @@
 
     <h2 id="tr" class="text-center">B/E Branch (Association) Custom House, Benapole</h2>
     <h2 id="tr" class="text-center">Work Report Sheet Per Day</h2>
-{{--
-    <div class="card-header">
-        {!! Form::open(['route' => 'get_work_report', 'method' => 'POST']) !!}
-            <div class="form-row">
+    <div class="row card pdn">
+        <div class="card-body">
+            {!! Form::open(['route' => 'get_work_report', 'method' => 'post']) !!}
+            @csrf
+                <div class="form-row">
+                    <div class="col-10">
+                        <div class="form-group form-inline m-0">
+                            {!! Form::label('target_date','Date') !!}
+                            {!! Form::date('target_date', $date , ['class'=>'form-control mx-2']) !!}
+                            {!! Form::submit('Filter', ['class'=>'btn btn-primary mx-2','style'=>'padding: .3rem 1rem;']) !!}
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-md btn-info" onclick="printDiv('printMe')"> Print Report</button>
+                    </div>
+                </div>
+            {!! Form::close() !!}
 
-                    {!! Form::date('target_date', date('Y-m-d')) !!}
-
-                    {!! Form::submit("Filter") !!}
-
-            </div>
-       {!! Form::close() !!}
-    </div> --}}
+        </div>
+    </div>
 
 
     @if (!empty($work_sheet[0]) )
-    <button class="btn btn-md btn-info mb-4" onclick="printDiv('printMe')"> Print Report</button>
     <div id='printMe'>
 
     <table id="daily_report" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th class="text-center">Date:</th>
-                <th class="text-center">{{date('d-m')}}</th>
+                <th class="text-center">{{date('d-m',strtotime($date))}}</th>
                 <th class="text-center" colspan="2">{{date('Y')}}</th>
                 <th class="text-center" colspan="4"></th>
                 <th class="text-center"></th>
@@ -41,7 +48,7 @@
         <tr>
             <td class="text-center">No</td>
             <td class="text-center" colspan="13">{{$file_data->name}}</td>
-            <td class="text-center">Total Item</td>
+            <td class="text-center">Total</td>
         </tr>
         <tr>
             <td class="text-center align-middle" rowspan="2" class="align-middle text-center align-items-center">{{$i++}}</td>
@@ -52,7 +59,7 @@
             <td class="text-center" colspan="2">Item 10 +</td>
             <td class="text-center" colspan="2">Note</td>
             <td class="text-center" colspan="2">Pages</td>
-            <td class="text-center align-middle" rowspan="3">{{$totalFileData[] = $file_data->TotalItem}}</td>
+            <td class="text-center align-middle" rowspan="3">{{$totalFileData[] = $file_data->total}}</td>
         </tr>
         <tr>
             <td class="text-center">{{$file_data->item_1}}</td>

@@ -29,22 +29,17 @@ class CreateFileDatasTable extends Migration
             $table->string('fees')->nullable();
             $table->string('page')->nullable();
             $table->string('no_of_pages')->nullable();
-
             $table->string('status');
-
-
             $table->unsignedBigInteger('ie_data_id')->nullable();
             $table->foreign('ie_data_id')->references('id')
                 ->on('ie_datas')->onUpdate('cascade')->onDelete('cascade');
-
             $table->unsignedBigInteger('agent_id')->nullable();
             $table->foreign('agent_id')->references('id')
                 ->on('agents')->onUpdate('cascade')->onDelete('cascade');
-
             $table->unsignedBigInteger('operator_id')->nullable();
             $table->foreign('operator_id')->references('id')
                 ->on('users')->onUpdate('cascade')->onDelete('cascade');
-
+            $table->timestamp('delivered_at')->nullable();
             $table->timestamps();
         });
     }

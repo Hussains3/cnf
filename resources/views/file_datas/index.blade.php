@@ -59,7 +59,11 @@
                     <td>{{$file_data->be_number}}</td>
                     <td>{{$file_data->be_date}}</td>
                     @endrole
-                    <td>{{$file_data->agent->name}}</td>
+                    <td>
+                        @if ($file_data->agent)
+                        {{$file_data->agent->name}}
+                        @endif
+                    </td>
 
                     @role('admin|operator|deliver')
                     <td>{{$file_data->ie_data->name ?? ''}}</td>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Models\File_data;
 use App\Purchase;
 use App\Sale;
 use App\Supplier;
@@ -27,6 +28,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $i = 0;
+        $date = date('Y-m-d');
+        $file_datas = File_data::whereDate('created_at', $date)->with('agent')->with('ie_data')->orderBy('id', 'DESC')->get();
+        return view('home', compact('file_datas', 'i'));
     }
 }

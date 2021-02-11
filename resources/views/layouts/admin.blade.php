@@ -125,12 +125,6 @@
                 <a href="#reportSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle" data-target="#reportSubmenu">Reports</a>
                 <ul class="{{ Request::path() === 'data_entry' ||  Request::path() === 'export_report' || Request::path() === 'import_report' || Request::path() === 'goods_report' ||Request::path() === 'daily_report' || Request::path() === 'daily_summary' || Request::path() === 'deliver_report' || Request::path() === 'operator_report'|| Request::path() === 'receiver_report'}}collapse list-unstyled" data-parent="#accordionExample" id="reportSubmenu">
                     <li>
-                        <a href="/daily_summary">Daily Summary Report</a>
-                    </li>
-                    <li>
-                        <a href="/daily_report">Daily Report</a>
-                    </li>
-                    <li>
                         <a href="/receiver_report">Receiver Report</a>
                     </li>
                     <li>
@@ -138,6 +132,12 @@
                     </li>
                     <li>
                         <a href="/export_report">Delivery Report (Export)</a>
+                    </li>
+                    <li>
+                        <a href="/daily_summary">Daily Summary Report</a>
+                    </li>
+                    <li>
+                        <a href="/daily_report">Daily Report</a>
                     </li>
                     <li class="d-none">
                         <a href="/operator_report">Operator Report</a>
@@ -198,7 +198,7 @@
 
                         <li class="nav-item active">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ Auth::user()->name}} <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">

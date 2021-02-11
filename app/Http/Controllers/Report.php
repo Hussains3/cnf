@@ -170,7 +170,7 @@ class Report extends Controller
     public function daily_summary()
     {
         $date = Carbon::today();
-        $file_datas = File_data::whereDate('created_at', $date)->get();
+        $file_datas = File_data::whereDate('delivered_at', $date)->get();
         $total_file = count($file_datas);
         $total_amount = 0;
         foreach ($file_datas as $file_datas) {
@@ -184,7 +184,7 @@ class Report extends Controller
     {
         $date = $request->date;
 
-        $file_datas = File_data::whereDate('created_at', $date)->get();
+        $file_datas = File_data::whereDate('delivered_at', $date)->get();
         $total_file = count($file_datas);
         $total_amount = 0;
         foreach ($file_datas as $file_datas) {
@@ -198,9 +198,10 @@ class Report extends Controller
 
     public function daily_report()
     {
+        $i = 0;
         $date = Carbon::today();
         $file_datas = File_data::with(['ie_data', 'agent', 'operator'])
-            ->whereDate('created_at', $date)
+            ->whereDate('delivered_at', $date)
             ->where('status', '<>', 'Received')
             ->orderBy('be_number', 'asc')
             ->get();
@@ -210,17 +211,17 @@ class Report extends Controller
             $total_amount = $total_amount + $file_data->fees;
         }
         $users = User::pluck('name', 'id');
-        return view('reports.daily_report', compact('file_datas', 'users', 'total_amount', 'total_file', 'date'));
+        return view('reports.daily_report', compact('i', 'file_datas', 'users', 'total_amount', 'total_file', 'date'));
     }
 
 
 
     public function get_daily_report(Request $request)
     {
-
+        $i = 0;
         $date = $request->to_date;
         $file_datas = File_data::with(['ie_data', 'agent', 'operator'])
-            ->whereDate('created_at', $date)
+            ->whereDate('delivered_at', $date)
             ->where('status', '<>', 'Received')
             ->orderBy('be_number', 'asc')
             ->get();
@@ -230,7 +231,7 @@ class Report extends Controller
             $total_amount = $total_amount + $file_data->fees;
         }
         $users = User::pluck('name', 'id');
-        return view('reports.daily_report', compact('file_datas', 'users', 'total_amount', 'total_file', 'date'));
+        return view('reports.daily_report', compact('i', 'file_datas', 'users', 'total_amount', 'total_file', 'date'));
     }
 
 
@@ -338,7 +339,7 @@ class Report extends Controller
                     salaries.`year` = ' . $year . ' AND
                     salaries.`month` = ' . $month . ' ) as holiday'
             )
-            ->whereBetween('file_datas.created_at', [$startDate, $endDate])
+            ->whereBetween('file_datas.delivered_at', [$startDate, $endDate])
             ->groupBy('file_datas.operator_id')
             // ->groupBy('users.name')
             ->join('users', 'file_datas.operator_id', '=', 'users.id')
@@ -381,12 +382,13 @@ class Report extends Controller
 
 
 
-    public function work_report_per_day($date = "2020-12-21")
+    public function work_report_per_day()
     {
         $i = 1;
         $users = User::get();
         $agents = Agent::pluck('name', 'id');
-        $date = !empty($date) ? $date : date('Y-m-d');
+        // $date = date('Y-m-d');
+        $date = date('Y-m-d', strtotime("-1 days"));
 
 
         $work_sheet = DB::table('file_datas')
@@ -398,6 +400,7 @@ class Report extends Controller
             SUM( IF(file_datas.page BETWEEN 8 AND 9,1,0) ) AS item_8_9,
             SUM( IF(file_datas.page >= 10 ,1,0) ) AS item_10,
             SUM(file_datas.page) AS TotalItem,
+            COUNT(file_datas.id) AS total,
             SUM(file_datas.no_of_pages) AS total_pages'
             )
             ->whereDate('lodgement_date', '=', $date)
@@ -405,18 +408,41 @@ class Report extends Controller
             ->join('users', 'users.id', '=', 'file_datas.operator_id')
             ->get();
         // return $work_sheet;
-
-        // if ($work_sheet != 0) {
-        //     # code...
-        // }
-        //   return  $date;
-        return view('reports.work_report', compact('i', 'work_sheet'));
+        return view('reports.work_report', compact('i', 'work_sheet', 'date'));
     }
+
 
     public function get_work_report(Request $request)
     {
+        // $requestedTime = strtotime($request->target_date);
+        // return $request->target_date;
+        $i = 1;
+        $users = User::get();
+        $agents = Agent::pluck('name', 'id');
+        // $date = date('Y-m-d');
+        $date = $request->target_date;
 
-        return $this->work_report_per_day($request->target_date);
+
+        $work_sheet = DB::table('file_datas')
+            ->selectRaw(
+                'users.`name`,
+            SUM( IF(file_datas.page = 1,1,0) ) AS item_1,
+            SUM( IF(file_datas.page BETWEEN 2 AND 4,1,0) ) AS item_2_4,
+            SUM( IF(file_datas.page BETWEEN 5 AND 7,1,0) ) AS item_5_7,
+            SUM( IF(file_datas.page BETWEEN 8 AND 9,1,0) ) AS item_8_9,
+            SUM( IF(file_datas.page >= 10 ,1,0) ) AS item_10,
+            SUM(file_datas.page) AS TotalItem,
+            COUNT(file_datas.id) AS total,
+            SUM(file_datas.no_of_pages) AS total_pages'
+            )
+            ->whereDate('lodgement_date', '=', $date)
+            ->groupBy('users.name')
+            ->join('users', 'users.id', '=', 'file_datas.operator_id')
+            ->get();
+        // return $work_sheet;
+        return view('reports.work_report', compact('i', 'work_sheet', 'date'));
+
+        // return $this->work_report_per_day($request->target_date);
     }
 
 
@@ -425,8 +451,12 @@ class Report extends Controller
     {
         $i = 0;
         $startDate = Carbon::now(); //returns current day
-        $first = $request->from_date ?? "2020-12-01";
-        $last = $request->to_date ?? "2020-12-31";
+
+        $firstDay = $startDate->firstOfMonth();
+        $lastDay = $startDate->firstOfMonth();
+
+        $first = $request->from_date ?? $firstDay;
+        $last = $request->to_date ?? $lastDay;
         $name = null;
 
         $assReportQ = DB::table('file_datas')

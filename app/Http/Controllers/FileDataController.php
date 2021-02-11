@@ -24,6 +24,19 @@ class FileDataController extends Controller
     {
         $i = 0;
         $file_datas = File_data::with('agent')->with('ie_data')->orderBy('id', 'DESC')->get();
+
+        //this code is need only once to copy updated_at to delevired at
+        // $fileDataUpdating = File_data::all();
+        // $collection = collect($fileDataUpdating);
+        // foreach ($collection as $upfile) {
+        //     if ($upfile->status == 'Delivered' || $upfile->status == 'Printed') {
+        //         $upfile->delivered_at = $upfile->updated_at;
+        //         $upfile->save();
+        //     }
+        // }
+        // //this above code is need only once to copy updated_at to delevired at
+
+
         return view('file_datas.index', compact('file_datas', 'i'));
     }
 
@@ -140,35 +153,17 @@ class FileDataController extends Controller
 
         $now = Carbon::now();
         $year = $now->year;
-
-        // if ($file_data->be_number != '') {
-
-        //     $next_be_number = $file_data->be_number;
-        // } else {
-        //     $next_be_number = File_data::where('status', '!=', 'Received')->latest()->first();
-
-        //     return $next_be_number;
-        //     if (!empty($next_be_number)) {
-
-        //         $next_be_number = $next_be_number->be_number;
-        //     } else {
-        //         $next_be_number = 1;
-        //     }
-        // }
-
-
-        // $agents = Agent::pluck('name', 'id');
         $agents = Agent::select(DB::raw(" CONCAT (name,' (',ain_no,')') as name"), 'id')->pluck('name', 'id');
 
         $ie_datas = Ie_data::pluck('name', 'id');
-
-        // $agents = Ie_data::select(DB::raw(" CONCAT (name,' (',ain_no,')') as name"), 'id')->pluck('name', 'id');
 
         $file_data = File_data::where('id', $file_data->id)->with('ie_data')->first();
 
 
         return view('file_datas.edit', compact('file_data', 'agents', 'ie_datas', 'year'));
     }
+
+
 
     public function file_edit(File_data $file_data)
     {
@@ -185,22 +180,14 @@ class FileDataController extends Controller
      */
     public function update(Request $request, File_data $file_data)
     {
-        // if ($request->input('print')) {
-        //     return 'Print Hobe';
-        //     // return redirect()->route('file_datas.show', $file_data->id);
-        // } else {
-        //     return 'Del Hobe';
-        //     // return redirect()->route('file_datas.index');
-        // }
+
 
         $time = strtotime($request->lodgement_date);
         $lmd = date('Y-m-d', $time);
-        // echo $newformat;
         $mtime = strtotime($request->manifest_date);
         $mnfd = date('Y-m-d', $mtime);
-        // echo $newformat;
 
-
+        // receiver------------------------------------------------------------
         if (Auth::user()->hasRole('receiver')) {
             $this->validate($request, [
                 'lodgement_no' => 'required',
@@ -217,11 +204,10 @@ class FileDataController extends Controller
             $file_data->manifest_date = $mnfd;
             $file_data->agent_id = $request->agent_id;
             $file_data->group = $request->group;
-            // $file_data->operator_id = Auth::user()->id;
             $file_data->save();
             return redirect()->route('file_datas.create');
         }
-
+        // operator-------------------------------------------------------------
         if (Auth::user()->hasRole('operator')) {
 
             $this->validate($request, [
@@ -232,7 +218,7 @@ class FileDataController extends Controller
                 'ie_type' => 'required',
                 'agent_id' => 'required',
                 'goods_type' => 'required',
-                'be_number' => 'required',
+                'be_number' => 'required|unique:file_datas',
                 'page' => 'required'
             ]);
 
@@ -277,8 +263,6 @@ class FileDataController extends Controller
 
             $pages =  $request->page;
             $numberofPages = ($pages  >  1) ? ceil((($pages - 1) / 3  + 1)) : 1;
-            // return $numberofPages;
-
 
             $file_data->lodgement_no = $request->lodgement_no;
             $file_data->lodgement_date = $lmd;
@@ -294,7 +278,6 @@ class FileDataController extends Controller
             $file_data->be_date = $request->be_date;
             $file_data->page = $pages;
             $file_data->no_of_pages  = $numberofPages;
-
 
 
             $file_data->fees = $request->fees;
@@ -318,6 +301,8 @@ class FileDataController extends Controller
             return redirect()->route('file_datas.index');
         }
 
+
+        // admin and deliverer-----------------------------------------------------------
         if (Auth::user()->hasRole('admin|deliver')) {
 
             $this->validate($request, [
@@ -345,34 +330,20 @@ class FileDataController extends Controller
             $ie_data->ie = $request->ie_type;
             $ie_data->name = $request->name;
             $ie_data->owners_name = $request->owners_name;
-
             if ($request->hasFile('photo')) {
-                //get image file.
                 $image = $request->photo;
-                //get just extension.
                 $ext = $image->getClientOriginalExtension();
-                //make a unique name
                 $filename = uniqid() . '.' . $ext;
-
-                //delete the previous image.
-                //             Storage::delete("images/{$projectVerified->image}");
-
-                //upload the image
                 $request->photo->move(public_path('images'), $filename);
-
-                //this column has a default value so don't need to set it empty.
                 $ie_data->photo = 'images/' . $filename;
             }
-
             $ie_data->destination = $request->destination;
-
             $ie_data->office_address = $request->office_address;
             $ie_data->phone = $request->phone;
             $ie_data->email = $request->email;
             $ie_data->house = $request->house;
             $ie_data->save();
 
-            //return $request->all();
             $pages =  $request->page;
             $numberofPages = ($pages  >  1) ? ceil((($pages - 1) / 3  + 1)) : 1;
 
@@ -390,18 +361,13 @@ class FileDataController extends Controller
             $file_data->be_date = $request->be_date;
             $file_data->page = $request->page;
             $file_data->no_of_pages  = $numberofPages;
-
-
-            // $file_data->operator_id = Auth::user()->id;
-
-            // if (Auth::user()->hasRole('admin')) {
-            //
-            //     $file_data->status = 'Operated';
-            // }
-
-
             $file_data->fees = $request->fees;
             $file_data->status = 'Delivered';
+            $file_data->delivered_at = Carbon::now();
+
+            // return $file_data;
+
+
             $file_data->save();
 
 
@@ -409,26 +375,26 @@ class FileDataController extends Controller
             $agent_email = $agent_phone->email;
             $agent_phone = $agent_phone->phone;
 
-            //      Sms Data
+            //Sms Data
 
             $ie_name = Ie_data::where('id', $file_data->ie_data_id)->first();
             $ie_name = $ie_name->name;
             $sms_data = 'B/E Number:' . $file_data->be_number . '. B/E Date: ' . $file_data->be_date . '. ' . $file_data->ie_type . '. Name: ' . $ie_name . '. Manifest No: ' . $file_data->manifest_no . '. Manifest Date: ' . $file_data->manifest_date;
+            //SMS Function and API
+            //     url = "http://esms.dianahost.com/smsapi";
+            //     api_ke = "C20075015fcfa6e18ab532.04423004",
+            //     senderid =  "8809612446331",
 
-
-
-            //      SMS Function and API
-
+            //GSMS API key: R2000074601e6d5b848ba2.48049824
             function send_sms($sms_data, $agent_phone)
             {
-
-                $url = "http://esms.dianahost.com/smsapi";
+                $url = "http://gsms.pw/smsapi";
                 $data = [
-                    "api_key" => "C20075015fcfa6e18ab532.04423004",
+                    "api_key" => "R2000074601e6d5b848ba2.48049824",
                     "type" => "text",
                     "contacts" => $agent_phone,
-                    "senderid" => "8809612446331",
-                    "msg" => $sms_data,
+                    "senderid" => "8809601001311",
+                    "msg" => "$sms_data",
                 ];
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
@@ -441,13 +407,13 @@ class FileDataController extends Controller
                 return $response;
             }
 
+            // calling the sms function
+            send_sms($sms_data, $agent_phone);
 
-            //      email Function
 
+            //email Function
             if (!empty($agent_email)) {
                 $email_data = ['be_number' => $file_data->be_number, 'be_date' => $file_data->be_date, 'ie_type' => $file_data->ie_type, 'ie_name' => $ie_name, 'manifest_no' => $file_data->manifest_no, 'manifest_date' => $file_data->manifest_date];
-
-
                 $file_data_check = Data_user::where('file_data_id', $file_data->id)->where('user_id', Auth::user()->id)->get();
                 if (count($file_data_check) == '0') {
                     $data_user = new Data_user();
@@ -456,27 +422,19 @@ class FileDataController extends Controller
                     $data_user->note = Auth::user()->name;
                     $data_user->save();
 
-                    send_sms($sms_data, $agent_phone);
-
                     $djm = 'bnplcnfasso@gmail.com';
                     Mail::to($agent_email)->send(new SendMailable($email_data));
                 }
+                // return redirect()->route('file_datas.show', $file_data->id);
             }
-            //      email Function
+
             return redirect()->route('file_datas.show', $file_data->id);
         }
-
-
-
-
-        // if ($request->input('print')) {
-        //     // return redirect()->route('file_datas.show', $file_data->id);
-        // } else {
-        //     // return redirect()->route('file_datas.index');
-        // }
-        // return redirect()->route('file_datas.index');
-        // return redirect()->route('file_datas.show', $file_data->id);
     }
+
+
+
+
 
     /**
      * Remove the specified resource from storage.

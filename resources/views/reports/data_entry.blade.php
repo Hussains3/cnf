@@ -141,7 +141,7 @@
                         { data: 'lodgement_no', name: 'lodgement_no' },
                         { data: 'manifest_no', name: 'manifest_no' },
                         { data: 'created_at', name: 'created_at' },
-                        { data: 'updated_at', name: 'updated_at' },
+                        { data: 'delivered_at', name: 'delivered_at' },
                         { data: 'page', name: 'page' },
                         { data: 'status', name: 'status' },
                     ],

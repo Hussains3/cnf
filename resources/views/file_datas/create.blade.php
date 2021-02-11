@@ -14,7 +14,7 @@
                     <div class="form-group col-6">
                         {{Form::label('lodgement_no', 'Lodgement No')}}
                         <div class="input-group mb-3">
-                            <span style="padding-top: 5px;padding-right: 10px">2020 - </span> {{Form::text('lodgement_no', $next_lodgement_no, array('class' => 'form-control', 'placeholder' => 'Lodgement No', 'required'  ))}}
+                            <span style="padding-top: 5px;padding-right: 10px">{{date('Y')}} - </span> {{Form::text('lodgement_no', $next_lodgement_no, array('class' => 'form-control', 'placeholder' => 'Lodgement No', 'required'  ))}}
                         </div>
                     </div>
 

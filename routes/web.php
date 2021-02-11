@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -94,3 +95,15 @@ Route::resource('/users', 'App\Http\Controllers\UserController');
 
 
 Route::resource('/salary', 'App\Http\Controllers\SalaryController');
+
+
+Route::get('/clear', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    return "Cleared!";
+});
+Route::get('/key', function () {
+    Artisan::call('key:generate');
+    return "Key Generated!";
+});

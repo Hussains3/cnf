@@ -10,7 +10,8 @@ class File_data extends Model
     use HasFactory;
     protected $casts = [
         'created_at' => 'datetime:H:i',
-        'updated_at' => 'datetime:H:i'
+        'updated_at' => 'datetime:H:i',
+        'delivered_at' => 'datetime:H:i'
     ];
     public function agent()
     {
@@ -31,5 +32,4 @@ class File_data extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

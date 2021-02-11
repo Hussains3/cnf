@@ -1,0 +1,125 @@
+if (Auth::user()->hasRole('admin|deliver')) {
+
+            return Auth::user()->Role();
+
+            $this->validate($request, [
+                'lodgement_no' => 'required',
+                'lodgement_date' => 'required',
+                'manifest_no' => 'required',
+                'manifest_date' => 'required',
+                'ie_type' => 'required',
+                'agent_id' => 'required',
+                'group' => 'required',
+                'goods_type' => 'required',
+                'be_number' => 'required|unique:file_datas',
+                'page' => 'required'
+            ]);
+
+
+            if ($file_data->ie_data_id == '') {
+
+                $ie_data = new Ie_data();
+            } else {
+
+                $ie_data = Ie_data::find($file_data->ie_data_id);
+            }
+            $ie_data->bin_no = $request->bin_no;
+            $ie_data->ie = $request->ie_type;
+            $ie_data->name = $request->name;
+            $ie_data->owners_name = $request->owners_name;
+            if ($request->hasFile('photo')) {
+                $image = $request->photo;
+                $ext = $image->getClientOriginalExtension();
+                $filename = uniqid() . '.' . $ext;
+                $request->photo->move(public_path('images'), $filename);
+                $ie_data->photo = 'images/' . $filename;
+            }
+            $ie_data->destination = $request->destination;
+            $ie_data->office_address = $request->office_address;
+            $ie_data->phone = $request->phone;
+            $ie_data->email = $request->email;
+            $ie_data->house = $request->house;
+            $ie_data->save();
+
+            //return $request->all();
+            $pages =  $request->page;
+            $numberofPages = ($pages  >  1) ? ceil((($pages - 1) / 3  + 1)) : 1;
+
+            $file_data->lodgement_no = $request->lodgement_no;
+            $file_data->lodgement_date = $lmd;
+            $file_data->manifest_no = $request->manifest_no;
+            $file_data->manifest_date = $mnfd;
+            $file_data->ie_type = $request->ie_type;
+            $file_data->ie_data_id = $ie_data->id;
+            $file_data->agent_id = $request->agent_id;
+            $file_data->group = $request->group;
+            $file_data->goods_name = $request->goods_name;
+            $file_data->goods_type = $request->goods_type;
+            $file_data->be_number = $request->be_number;
+            $file_data->be_date = $request->be_date;
+            $file_data->page = $request->page;
+            $file_data->no_of_pages  = $numberofPages;
+            $file_data->fees = $request->fees;
+            $file_data->status = 'Delivered';
+            $file_data->delivered_at = Carbon::now();
+
+            return $file_data;
+            $file_data->save();
+
+
+            $agent_phone = Agent::where('id', $file_data->agent_id)->first();
+            $agent_email = $agent_phone->email;
+            $agent_phone = $agent_phone->phone;
+
+            //Sms Data
+
+            $ie_name = Ie_data::where('id', $file_data->ie_data_id)->first();
+            $ie_name = $ie_name->name;
+            $sms_data = 'B/E Number:' . $file_data->be_number . '. B/E Date: ' . $file_data->be_date . '. ' . $file_data->ie_type . '. Name: ' . $ie_name . '. Manifest No: ' . $file_data->manifest_no . '. Manifest Date: ' . $file_data->manifest_date;
+            //SMS Function and API
+
+            function send_sms($sms_data, $agent_phone)
+            {
+                $url = "http://esms.dianahost.com/smsapi";
+                $data = [
+                    "api_key" => "C20075015fcfa6e18ab532.04423004",
+                    "type" => "text",
+                    "contacts" => $agent_phone,
+                    "senderid" => "8809612446331",
+                    "msg" => $sms_data,
+                ];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                return $response;
+            }
+
+
+            //email Function
+            if (!empty($agent_email)) {
+                $email_data = ['be_number' => $file_data->be_number, 'be_date' => $file_data->be_date, 'ie_type' => $file_data->ie_type, 'ie_name' => $ie_name, 'manifest_no' => $file_data->manifest_no, 'manifest_date' => $file_data->manifest_date];
+                $file_data_check = Data_user::where('file_data_id', $file_data->id)->where('user_id', Auth::user()->id)->get();
+                if (count($file_data_check) == '0') {
+                    $data_user = new Data_user();
+                    $data_user->file_data_id = $file_data->id;
+                    $data_user->user_id = Auth::user()->id;
+                    $data_user->note = Auth::user()->name;
+                    $data_user->save();
+
+                    send_sms($sms_data, $agent_phone);
+
+                    $djm = 'bnplcnfasso@gmail.com';
+                    Mail::to($agent_email)->send(new SendMailable($email_data));
+                }
+            }
+            //email Function
+
+
+
+            return redirect()->route('file_datas.show', $file_data->id);
+        }

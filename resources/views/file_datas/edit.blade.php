@@ -25,7 +25,7 @@
                     <div class="form-group col-6">
                         {{Form::label('lodgement_no', 'Lodgement No')}}
                         <div class="input-group mb-3">
-                            <span style="padding-top: 5px;padding-right: 10px">2020 - </span>{{Form::text('lodgement_no', null, array('class' => 'form-control', 'placeholder' => 'Lodgement No', 'required'  ))}}
+                            <span style="padding-top: 5px;padding-right: 10px">{{date('Y')}} - </span>{{Form::text('lodgement_no', null, array('class' => 'form-control', 'placeholder' => 'Lodgement No', 'required'  ))}}
                         </div>
                     </div>
 
@@ -229,14 +229,14 @@
                     <div class="form-group col-4">
                         {{Form::label('page', 'Item')}}
                         <div class="input-group mb-3">
-                            {{Form::number('page', null, array('class' => 'form-control', 'placeholder' => 'Pages', 'required'  ))}}
+                            {{Form::number('page', null,['class' => 'form-control', 'placeholder' => 'maximum 299', 'required','max'=>'299'])}}
                         </div>
                     </div>
 
                     <div class="form-group col-4">
                         {{Form::label('fees', 'Fees /=')}}
                         <div class="input-group mb-3">
-                            {{Form::number('fees', '230', array('class' => 'form-control', 'placeholder' => '230/='))}}
+                            {{Form::number('fees', '230',['class' => 'form-control', 'placeholder' => '230/='])}}
                         </div>
                     </div>
 
@@ -257,21 +257,15 @@
                             <div class="text-right">
                                 {{-- {{Form::submit('Deliver', ['class' => 'btn btn-primary'])}} --}}
                                 {{-- <button type="submit" name="action1" class="btn btn-primary" value="deliver">Deliver</button> --}}
-                                <button type="submit" name="action" class="btn btn-secondary mx-2" value="print"><a href="{{route('file_datas.update',$file_data->id)}}" target="_blank">Deliver and Print</a></button>
-
+                                <button type="submit" name="action" class="btn btn-secondary mx-2" value="print">Deliver and Print</button>
+                                {{-- <button type="submit" name="action" class="btn btn-secondary mx-2" value="print"><a href="{{route('file_datas.update',$file_data->id)}}">Deliver and Print</a></button> --}}
                             </div>
                         </div>
-
-
                     @endrole
-
                 </div>
                 {{ Form::close() }}
             </div>
         </div>
-
-
-
         {{--   End of Oprator part--}}
 
     </div>
